@@ -122,7 +122,7 @@
             <img id="logo" src="BConnect_logo.png" alt="Banjara Connect Logo" class="mx-auto mb-6">
             <!-- Upload your formatted logo.png -->
             <div class="space-y-4">
-                <input type="text" id="usernameInput" placeholder="Choose Username"
+                <input type="text" id="usernameInput" placeholder="Choose Username (Optional)"
                     class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
                 <input type="file" id="profileImageInput" accept="image/*" class="hidden">
                 <button onclick="document.getElementById('profileImageInput').click()"
@@ -132,11 +132,11 @@
                     class="hidden mx-auto w-20 h-20 rounded-full bg-saffron-200 flex items-center justify-center overflow-hidden border-2 border-saffron-300">
                     <i class="fas fa-user text-saffron-500 text-3xl"></i>
                 </div>
-                <input type="tel" id="phoneInput" placeholder="Mobile Number (10 digits)" maxlength="10"
+                <input type="tel" id="phoneInput" placeholder="Mobile Number (10 digits only)" maxlength="10"
                     class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500"
-                    onkeyup="checkPhone()">
+                    oninput="checkPhone()">
                 <button onclick="sendOTP()" id="sendOtpBtn"
-                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50 hover:shadow-lg transition cursor-not-allowed disabled:cursor-not-allowed"
+                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50 hover:shadow-lg transition disabled:cursor-not-allowed"
                     disabled>Next</button>
                 <div id="otpSection" class="hidden space-y-4">
                     <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
@@ -149,7 +149,9 @@
             </div>
             <p class="text-center mt-4 text-xs text-saffron-600">New here? <button onclick="signUp()"
                     class="text-saffron-500 font-semibold hover:underline">Sign up</button></p>
-        </div>
+            </div>
+
+
     <!-- Main App -->
     <div id="app" class="hidden min-h-screen bg-saffron-50">
         <!-- Home Header with Notification & Plus -->
@@ -454,13 +456,22 @@
         let currentPage = 'feed';
 
         // Login functions
-        function sendOTP() {
-            const phone = document.getElementById('phoneInput').value;
-            if (phone.length === 10) {
-                document.getElementById('otpSection').classList.remove('hidden');
-                document.getElementById('sendOtpBtn').disabled = true;
+        function checkPhone() {
+                const phone = document.getElementById('phoneInput').value.replace(/\D/g, ''); // Strip non-digits
+                const btn = document.getElementById('sendOtpBtn');
+                const isValid = phone.length === 10;
+                btn.disabled = !isValid;
+                btn.style.opacity = isValid ? '1' : '0.5';
+                btn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+                if (isValid) {
+                    console.log('Button enabled! Phone:', phone); // Debug log
+                }
             }
-        }
+
+            // No need for addEventListener if using oninput; but add for safety
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('phoneInput').addEventListener('input', checkPhone);
+            });
 
         function verifyOTP() {
             const otp = document.getElementById('otpInput').value;
