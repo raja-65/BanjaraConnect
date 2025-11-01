@@ -774,12 +774,13 @@
         }
 
         function initializeApp() {
-            loadStories();
-            loadPosts();
-            loadMessages();
-            loadReels();
-            updateProfile();
-        }
+                loadStories();
+                loadPosts();
+                loadMessages();
+                loadReels();
+                updateProfile();
+                initReelScrollDetection();
+            }
 
         // Load Stories
         function loadStories() {
@@ -862,14 +863,14 @@
 
         // Load Reels
         function loadReels() {
-            const container = document.getElementById('reelsContainer');
-            container.innerHTML = reels.map(reel => `
-                <div class="relative h-screen snap-center flex items-center justify-center bg-black">
-                    <iframe class="w-full h-full"
-                        src="https://www.youtube.com/embed/${reel.embed}?autoplay=1&mute=0&loop=1&playlist=${reel.embed}&controls=1"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+                const container = document.getElementById('reelsContainer');
+                container.innerHTML = reels.map((reel, index) => `
+        <div class="relative h-screen snap-center flex items-center justify-center bg-black" data-reel-index="${index}">
+            <iframe id="reel-${index}" class="w-full h-full"
+                src="https://www.youtube.com/embed/${reel.embed}?enablejsapi=1&autoplay=${index === 0 ? 1 : 0}&mute=0&loop=1&playlist=${reel.embed}&controls=1"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
                     <div class="absolute bottom-20 left-4 text-white space-y-4 z-10 max-w-xs">
                         <p class="font-bold text-xl drop-shadow-lg">${reel.title}</p>
                         <div class="flex space-x-6">
@@ -890,6 +891,38 @@
             `).join('');
         }
 
+        function initReelScrollDetection() {
+                const reelsContainer = document.getElementById('reelsContainer');
+                let currentReelIndex = 0;
+
+                if (reelsContainer) {
+                    reelsContainer.addEventListener('scroll', () => {
+                        const scrollTop = reelsContainer.scrollTop;
+                        const windowHeight = window.innerHeight;
+                        const newIndex = Math.round(scrollTop / windowHeight);
+
+                        if (newIndex !== currentReelIndex) {
+                            // Pause previous reel
+                            const prevIframe = document.getElementById(`reel-${currentReelIndex}`);
+                            if (prevIframe) {
+                                const prevSrc = prevIframe.src;
+                                prevIframe.src = prevSrc.replace('autoplay=1', 'autoplay=0');
+                            }
+
+                            // Play new reel
+                            const newIframe = document.getElementById(`reel-${newIndex}`);
+                            if (newIframe) {
+                                const newSrc = newIframe.src;
+                                newIframe.src = newSrc.replace('autoplay=0', 'autoplay=1');
+                            }
+
+                            currentReelIndex = newIndex;
+                        }
+                    });
+                }
+            }
+
+            
         // Load Messages
         function loadMessages() {
             const container = document.getElementById('messagesList');
@@ -909,25 +942,30 @@
 
         // Navigation
         function showPage(page) {
-            ['feed', 'search', 'reels', 'messages', 'randomchat', 'profile'].forEach(p => {
-                document.getElementById(p).classList.add('hidden');
-            });
-            document.getElementById('homeHeader').classList.add('hidden');
-            document.getElementById('topNav').classList.add('hidden');
+                ['feed', 'search', 'reels', 'messages', 'randomchat', 'profile'].forEach(p => {
+                    document.getElementById(p).classList.add('hidden');
+                });
 
-            if (page === 'feed') {
-                document.getElementById('homeHeader').classList.remove('hidden');
-            } else {
-                document.getElementById('topNav').classList.remove('hidden');
-                const titles = {
-                    search: 'Search',
-                    reels: 'Reels',
-                    messages: 'Messages',
-                    randomchat: 'Random Chat',
-                    profile: 'Profile'
-                };
-                document.getElementById('topTitle').textContent = titles[page];
-            }
+                // Stop all reels when leaving reels page
+                if (page !== 'reels') {
+                    const reelsContainer = document.getElementById('reelsContainer');
+                    const iframes = reelsContainer.querySelectorAll('iframe');
+                    iframes.forEach(iframe => {
+                        const src = iframe.src;
+                        iframe.src = src.replace('autoplay=1', 'autoplay=0');
+                    });
+                } else {
+                    // When entering reels page, play first reel
+                    setTimeout(() => {
+                        const firstReel = document.getElementById('reel-0');
+                        if (firstReel) {
+                            const src = firstReel.src;
+                            firstReel.src = src.replace('autoplay=0', 'autoplay=1');
+                        }
+                    }, 100);
+                }
+
+            // Rest of the function continues...
 
             document.getElementById(page).classList.remove('hidden');
             currentPage = page;
@@ -987,8 +1025,14 @@
             }
 
         function closeStory() {
-            document.getElementById('storyModal').classList.add('hidden');
-        }
+                const storyModal = document.getElementById('storyModal');
+                const storyContent = storyModal.querySelector('.w-full.h-full');
+
+                // Stop any playing video
+                storyContent.innerHTML = '';
+
+                storyModal.classList.add('hidden');
+            }
 
         function likeStory() {
             showToast('Story liked! ❤️');
