@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banjara Connect - Instagram-Style Social</title>
+    <title>Banjara Connect</title>
     <!-- PWA Meta -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
@@ -74,7 +74,6 @@
         .gradient-text {
             background: linear-gradient(45deg, #f97316 0%, #fb923c 25%, #ea580c 50%, #c2410c 75%, #9a3412 100%);
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -86,72 +85,167 @@
             color: #ef4444 !important;
             transform: scale(1.1);
         }
+
+        #logo {
+            max-width: 150px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3));
+        }
+
+        .create-modal {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .create-btn {
+            transition: all 0.3s ease;
+        }
+
+        .create-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
     </style>
 </head>
 
 <body class="bg-saffron-50 text-saffron-700 min-h-screen">
     <!-- Login Page -->
-    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4 bg-white">
-        <div class="w-full max-w-md">
-            <div class="text-center mb-8">
-                <i class="fas fa-compass text-6xl mb-4 text-gradient-text"></i>
-                <h1 class="text-4xl font-bold text-saffron-700 mb-2">Banjara Connect</h1>
-                <p class="text-sm text-saffron-600">Connect with your roots</p>
-            </div>
+    <div id="loginPage"
+        class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-saffron-50 to-white">
+        <div class="w-full max-w-md text-center">
+            <img id="logo" src="logo.png" alt="Banjara Connect Logo" class="mx-auto mb-6">
+            <!-- Upload your formatted logo.png -->
             <div class="space-y-4">
+                <input type="text" id="usernameInput" placeholder="Choose Username"
+                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                <input type="file" id="profileImageInput" accept="image/*" class="hidden">
+                <button onclick="document.getElementById('profileImageInput').click()"
+                    class="w-full bg-saffron-100 text-saffron-600 py-3 rounded-md font-semibold hover:bg-saffron-200 transition">Upload
+                    Profile Photo (Optional)</button>
+                <div id="profilePreview"
+                    class="hidden mx-auto w-20 h-20 rounded-full bg-saffron-200 flex items-center justify-center overflow-hidden border-2 border-saffron-300">
+                    <i class="fas fa-user text-saffron-500 text-3xl"></i>
+                </div>
                 <input type="tel" id="phoneInput" placeholder="Mobile Number" maxlength="10"
                     class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
                 <button onclick="sendOTP()" id="sendOtpBtn"
-                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50"
+                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50 hover:shadow-lg transition"
                     disabled>Next</button>
                 <div id="otpSection" class="hidden space-y-4">
                     <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
                         class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500 text-center">
                     <p class="text-xs text-saffron-600 text-center">Demo: Use 123456</p>
                     <button onclick="verifyOTP()"
-                        class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold">Log
+                        class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold hover:shadow-lg transition">Log
                         In</button>
                 </div>
             </div>
             <p class="text-center mt-4 text-xs text-saffron-600">New here? <button onclick="signUp()"
-                    class="text-saffron-500 font-semibold">Sign up</button></p>
+                    class="text-saffron-500 font-semibold hover:underline">Sign up</button></p>
         </div>
     </div>
 
     <!-- Main App -->
     <div id="app" class="hidden min-h-screen bg-saffron-50">
-        <!-- Top Nav (for non-bottom nav pages) -->
+        <!-- Home Header with Notification & Plus -->
+        <header id="homeHeader"
+            class="fixed top-0 left-0 right-0 bg-white border-b border-saffron-200 z-50 px-4 py-2 flex items-center justify-between shadow-sm">
+            <h1 class="font-bold text-saffron-700 text-lg">Banjara Connect</h1>
+            <div class="flex space-x-4">
+                <button onclick="showNotifications()" class="p-2 hover:bg-saffron-100 rounded-full transition relative">
+                    <i class="fas fa-bell text-saffron-600"></i>
+                    <span
+                        class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                </button>
+        <button onclick="showCreateModal()" title="Create" class="p-2 hover:bg-saffron-100 rounded-full transition">
+            <i class="fas fa-plus text-saffron-600 text-lg"></i>
+        </button>
+            </div>
+        </header>
+
+        <!-- Top Nav (for non-home pages) -->
         <nav id="topNav"
             class="hidden fixed top-0 left-0 right-0 bg-white border-b border-saffron-200 z-50 px-4 py-2 flex items-center justify-between shadow-sm">
-            <button onclick="goBack()" title="Go back"><i class="fas fa-arrow-left text-saffron-600"></i></button>
+    <button onclick="goBack()" title="Back"><i class="fas fa-arrow-left text-saffron-600"></i></button>
             <h1 id="topTitle" class="font-semibold text-saffron-700">Banjara Connect</h1>
-            <button title="More options"><i class="fas fa-ellipsis-vertical text-saffron-600"></i></button>
+    <button title="More options"><i class="fas fa-ellipsis-vertical text-saffron-600"></i></button>
         </nav>
+
+        <!-- Create Modal -->
+        <div id="createModal" class="hidden fixed inset-0 create-modal flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+                <h2 class="text-xl font-bold text-saffron-700 mb-6 text-center">Create</h2>
+                <div class="space-y-4">
+                    <button onclick="createReel()"
+                        class="w-full create-btn bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-lg font-semibold">Reel</button>
+                    <button onclick="uploadStory()"
+                        class="w-full create-btn bg-saffron-100 text-saffron-700 py-3 rounded-lg font-semibold border border-saffron-300">Story</button>
+                    <button onclick="createPost()"
+                        class="w-full create-btn bg-saffron-100 text-saffron-700 py-3 rounded-lg font-semibold border border-saffron-300">Post</button>
+                </div>
+                <button onclick="closeCreateModal()"
+                    class="w-full mt-4 text-saffron-500 text-sm hover:underline">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Notifications Modal -->
+        <div id="notificationsModal"
+            class="hidden fixed inset-0 create-modal flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full max-h-[60vh] overflow-y-auto shadow-2xl">
+                <h2 class="p-4 font-bold text-saffron-700 border-b border-saffron-200">Notifications</h2>
+                <div class="p-4 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <p class="text-saffron-600">rajesh_k liked your post</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-comment text-saffron-500"></i>
+                        <p class="text-saffron-600">priya_d commented on your reel</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-user-plus text-blue-500"></i>
+                        <p class="text-saffron-600">New follower: anita_b</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-share text-green-500"></i>
+                        <p class="text-saffron-600">kumar_s shared your story</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-bookmark text-yellow-500"></i>
+                        <p class="text-saffron-600">meera_l saved your post</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Stories & Feed -->
         <main id="feed" class="pt-16 pb-16">
             <!-- Stories -->
             <div class="bg-white border-b border-saffron-200 px-4 py-2 overflow-x-auto whitespace-nowrap shadow-sm">
-                <div class="inline-flex space-x-2">
+                <div class="inline-flex space-x-2 py-2">
                     <div
-                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:scale-105 transition">
                         YT</div>
                     <div
-                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:scale-105 transition">
                         You</div>
                     <div
-                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:scale-105 transition">
                         Rajesh</div>
                     <div
-                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:scale-105 transition">
                         Priya</div>
-                    <!-- Add more dummy stories -->
+                    <div
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:scale-105 transition">
+                        Anita</div>
+                    <div
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:scale-105 transition">
+                        Kumar</div>
                 </div>
             </div>
 
             <!-- Posts Feed -->
-            <div id="postsFeed" class="space-y-2">
-                <!-- Dummy posts loaded by JS -->
+            <div id="postsFeed" class="space-y-2 px-2">
+                <!-- Loaded by JS with external links -->
             </div>
         </main>
 
@@ -187,16 +281,16 @@
 
         <!-- Search Page -->
         <section id="search" class="hidden min-h-screen pt-16 pb-16 bg-saffron-50">
-            <div class="bg-white p-2 border-b border-saffron-200 shadow-sm">
+            <div class="bg-white p-2 border-b border-saffron-200 shadow-sm sticky top-0 z-10">
                 <div class="flex">
                     <input type="text" id="searchInput" placeholder="Search Banjara stories..."
                         class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
-                    <button class="ml-2 p-3 bg-saffron-100 rounded-full" title="Filter"><i
+                    <button title="Filters" class="ml-2 p-3 bg-saffron-100 rounded-full hover:bg-saffron-200 transition"><i
                             class="fas fa-sliders-h text-saffron-600"></i></button>
                 </div>
             </div>
             <div id="searchResults" class="p-4 space-y-4">
-                <!-- Dynamic results -->
+                <!-- Dynamic -->
             </div>
         </section>
 
@@ -204,89 +298,173 @@
         <section id="reels" class="hidden min-h-screen bg-saffron-900">
             <div id="reelsContainer" class="h-screen overflow-y-auto snap-y snap-mandatory">
                 <div class="relative h-screen snap-center flex items-center justify-center text-white">
-                    <video class="reel-video w-full absolute inset-0 object-cover"
-                        src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" loop muted playsinline
-                        autoplay></video>
+                    <video class="reel-video w-full absolute inset-0 object-cover" controls loop muted playsinline
+                        src="https://player.vimeo.com/external/123456789.sd.mp4?s=token&profile_id=123"
+                        type="video/mp4"></video>
                     <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
-                        <p class="font-bold text-xl">Banjara Dance Reel</p>
+                        <p class="font-bold text-xl">Banjara Dance #1</p>
                         <div class="flex space-x-4">
-                            <i class="fas fa-heart text-2xl hover:scale-110 transition"></i>
-                            <i class="fas fa-comment text-2xl hover:scale-110 transition"></i>
-                            <i class="fas fa-share text-2xl hover:scale-110 transition"></i>
+                            <button onclick="likeReel(this)" title="Like"><i
+                                    class="far fa-heart text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="commentReel()" title="Comment"><i
+                                    class="far fa-comment text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="shareReel()" title="Share"><i
+                                    class="fas fa-share text-2xl hover:scale-110 transition"></i></button>
                         </div>
+                        <p class="text-sm">1.2k likes • 45 comments</p>
                     </div>
                 </div>
                 <div class="relative h-screen snap-center flex items-center justify-center text-white">
-                    <video class="reel-video w-full absolute inset-0 object-cover"
-                        src="https://www.w3schools.com/html/mov_bbb.mp4" loop muted playsinline autoplay></video>
+                    <video class="reel-video w-full absolute inset-0 object-cover" controls loop muted playsinline
+                        src="https://www.pexels.com/video/9909615/download/" type="video/mp4"></video>
                     <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
-                        <p class="font-bold text-xl">Cultural Stories</p>
+                        <p class="font-bold text-xl">Traditional Dance #2</p>
                         <div class="flex space-x-4">
-                            <i class="fas fa-heart text-2xl hover:scale-110 transition"></i>
-                            <i class="fas fa-comment text-2xl hover:scale-110 transition"></i>
-                            <i class="fas fa-share text-2xl hover:scale-110 transition"></i>
+                            <button onclick="likeReel(this)" title="Like"><i
+                                    class="far fa-heart text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="commentReel()" title="Comment"><i
+                                    class="far fa-comment text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="shareReel()" title="Share"><i
+                                    class="fas fa-share text-2xl hover:scale-110 transition"></i></button>
                         </div>
+                        <p class="text-sm">890 likes • 23 comments</p>
+                    </div>
+                </div>
+                <div class="relative h-screen snap-center flex items-center justify-center text-white">
+                    <video class="reel-video w-full absolute inset-0 object-cover" controls loop muted playsinline
+                        src="https://www.pexels.com/video/31643761/download/" type="video/mp4"></video>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
+                        <p class="font-bold text-xl">Graceful Dance #3</p>
+                        <div class="flex space-x-4">
+                            <button onclick="likeReel(this)" title="Like"><i
+                                    class="far fa-heart text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="commentReel()" title="Comment"><i
+                                    class="far fa-comment text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="shareReel()" title="Share"><i
+                                    class="fas fa-share text-2xl hover:scale-110 transition"></i></button>
+                        </div>
+                        <p class="text-sm">1.5k likes • 67 comments</p>
+                    </div>
+                </div>
+                <div class="relative h-screen snap-center flex items-center justify-center text-white">
+                    <video class="reel-video w-full absolute inset-0 object-cover" controls loop muted playsinline
+                        src="https://www.pexels.com/video/31846805/download/" type="video/mp4"></video>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
+                        <p class="font-bold text-xl">Vibrant Performance #4</p>
+                        <div class="flex space-x-4">
+                            <button onclick="likeReel(this)" title="Like"><i
+                                    class="far fa-heart text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="commentReel()" title="Comment"><i
+                                    class="far fa-comment text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="shareReel()" title="Share"><i
+                                    class="fas fa-share text-2xl hover:scale-110 transition"></i></button>
+                        </div>
+                        <p class="text-sm">2.1k likes • 89 comments</p>
+                    </div>
+                </div>
+                <div class="relative h-screen snap-center flex items-center justify-center text-white">
+                    <video class="reel-video w-full absolute inset-0 object-cover" controls loop muted playsinline
+                        src="https://www.pexels.com/video/8751124/download/" type="video/mp4"></video>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
+                        <p class="font-bold text-xl">Classic Dance #5</p>
+                        <div class="flex space-x-4">
+                            <button onclick="likeReel(this)" title="Like"><i
+                                    class="far fa-heart text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="commentReel()" title="Comment"><i
+                                    class="far fa-comment text-2xl hover:scale-110 transition"></i></button>
+                            <button onclick="shareReel()" title="Share"><i
+                                    class="fas fa-share text-2xl hover:scale-110 transition"></i></button>
+                        </div>
+                        <p class="text-sm">1.8k likes • 112 comments</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Messages Page -->
+        <!-- Messages Page with Groups & Individual -->
         <section id="messages" class="hidden min-h-screen pt-16 pb-16 bg-saffron-50">
-            <div class="bg-white p-4 border-b border-saffron-200 shadow-sm flex items-center">
+            <div class="bg-white p-4 border-b border-saffron-200 shadow-sm flex items-center sticky top-0 z-10">
                 <input type="text" placeholder="Search messages"
                     class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
-                <i class="fas fa-edit ml-4 text-saffron-600"></i>
+                <button onclick="showNewChat()" title="New chat"
+                    class="ml-4 p-3 bg-saffron-100 rounded-full hover:bg-saffron-200 transition"><i
+                        class="fas fa-edit text-saffron-600"></i></button>
             </div>
-            <div id="dmList" class="space-y-2 p-4">
-                <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
-                    onclick="openDM()">
-                    <img src="https://via.placeholder.com/50/f97316/ffffff?text=R" class="w-12 h-12 rounded-full"
-                        alt="User">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-saffron-700">rajesh_k</h3>
-                        <p class="text-sm text-saffron-600">Hey! Share your story?</p>
+            <div class="p-4 space-y-1">
+                <!-- Groups -->
+                <h3 class="font-semibold text-saffron-700 mb-2">Groups</h3>
+                <div class="space-y-2 mb-4">
+                    <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
+                        onclick="openGroupChat('Banjara Wanderers')">
+                        <i class="fas fa-users text-saffron-500 text-xl"></i>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-saffron-700">Banjara Wanderers</h3>
+                            <p class="text-sm text-saffron-600">15 members • New message</p>
+                        </div>
+                        <div class="text-xs text-saffron-400">Now</div>
                     </div>
-                    <div class="text-xs text-saffron-400">2m</div>
+                    <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
+                        onclick="openGroupChat('Cultural Fest')">
+                        <i class="fas fa-users text-saffron-500 text-xl"></i>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-saffron-700">Cultural Fest</h3>
+                            <p class="text-sm text-saffron-600">42 members • Event update</p>
+                        </div>
+                        <div class="text-xs text-saffron-400">2h</div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
-                    onclick="openDM()">
-                    <img src="https://via.placeholder.com/50/ea580c/ffffff?text=P" class="w-12 h-12 rounded-full"
-                        alt="User">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-saffron-700">priya_d</h3>
-                        <p class="text-sm text-saffron-600">Loved your post!</p>
+                <!-- Individual Chats -->
+                <h3 class="font-semibold text-saffron-700 mb-2">Direct Messages</h3>
+                <div id="dmList" class="space-y-2">
+                    <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
+                        onclick="openDM('rajesh_k')">
+                        <img src="https://via.placeholder.com/50/f97316/ffffff?text=R" class="w-12 h-12 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-saffron-700">rajesh_k</h3>
+                            <p class="text-sm text-saffron-600">Hey! Share your story?</p>
+                        </div>
+                        <div class="text-xs text-saffron-400">2m</div>
                     </div>
-                    <div class="text-xs text-saffron-400">1h</div>
+                    <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
+                        onclick="openDM('priya_d')">
+                        <img src="https://via.placeholder.com/50/ea580c/ffffff?text=P" class="w-12 h-12 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-saffron-700">priya_d</h3>
+                            <p class="text-sm text-saffron-600">Loved your post!</p>
+                        </div>
+                        <div class="text-xs text-saffron-400">1h</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- DM Chat View -->
-        <div id="dmView" class="hidden fixed inset-0 bg-white z-50">
+        <!-- DM/Group Chat View -->
+        <div id="chatView" class="hidden fixed inset-0 bg-white z-50">
             <div class="flex flex-col h-full">
                 <div class="bg-white p-4 border-b border-saffron-200 shadow-sm flex items-center">
-                    <button onclick="closeDM()" title="Back"><i class="fas fa-arrow-left mr-2 text-saffron-600"></i></button>
-                    <img src="https://via.placeholder.com/40/f97316/ffffff?text=R" class="w-10 h-10 rounded-full mr-3"
-                        alt="User">
-                    <h3 class="font-semibold text-saffron-700">rajesh_k</h3>
-                    <div class="ml-auto flex space-x-2">
+                    <button onclick="closeChat()" title="Back"><i class="fas fa-arrow-left mr-2 text-saffron-600"></i></button>
+                    <div id="chatHeader" class="flex-1 flex items-center space-x-3">
+                        <img src="https://via.placeholder.com/40/f97316/ffffff?text=R" class="w-10 h-10 rounded-full"
+                            alt="User">
+                        <h3 id="chatTitle" class="font-semibold text-saffron-700">rajesh_k</h3>
+                    </div>
+                    <div class="flex space-x-2">
                         <i class="fas fa-phone text-saffron-500"></i>
                         <i class="fas fa-video text-saffron-500"></i>
                         <i class="fas fa-ellipsis-vertical text-saffron-600"></i>
                     </div>
                 </div>
                 <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-saffron-50">
-                    <div class="chat-bubble bg-saffron-500 text-white p-3 rounded-2xl ml-auto">Hello from Banjara!</div>
-                    <div class="chat-bubble bg-white p-3 rounded-2xl shadow-sm">Hi! How's the community?</div>
-                    <div class="chat-bubble bg-saffron-500 text-white p-3 rounded-2xl ml-auto">Great, sharing stories!
-                    </div>
+                    <!-- Dynamic messages -->
                 </div>
                 <div class="p-4 border-t border-saffron-200">
                     <div class="flex">
-                        <input type="text" placeholder="Type a message..."
+                        <input type="text" id="chatInput" placeholder="Type a message..."
                             class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
-                        <button title="Send message" class="ml-2 p-3 bg-saffron-500 text-white rounded-full hover:shadow-md transition"><i
+                        <button onclick="sendChatMessage()" title="Send"
+                            class="ml-2 p-3 bg-saffron-500 text-white rounded-full hover:shadow-md transition"><i
                                 class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -324,15 +502,15 @@
             </div>
         </section>
 
-        <!-- Comments Modal -->
+        <!-- Comments Modal with Pre-built Comments -->
         <div id="commentsModal"
             class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-                <div class="p-4 border-b border-saffron-200 flex items-center">
+                <div class="p-4 border-b border-saffron-200 flex items-center sticky top-0 bg-white">
                     <img src="https://via.placeholder.com/40/f97316/ffffff?text=U" class="w-10 h-10 rounded-full mr-3"
                         alt="User">
                     <h3 class="font-semibold text-saffron-700">Post Comments</h3>
-                    <button onclick="closeComments()" title="Close comments" class="ml-auto p-2 hover:bg-saffron-100 rounded-full"><i
+                    <button onclick="closeComments()" title="Close" class="ml-auto p-2 hover:bg-saffron-100 rounded-full"><i
                             class="fas fa-times text-saffron-600"></i></button>
                 </div>
                 <div id="commentsList" class="p-4 space-y-4">
@@ -340,10 +518,10 @@
                         <img src="https://via.placeholder.com/30/f97316/ffffff?text=A" class="w-8 h-8 rounded-full"
                             alt="User">
                         <div class="flex-1">
-                            <p class="font-semibold text-saffron-700">anita_b <span class="text-sm text-saffron-500">•
-                                    2h</span></p>
-                            <p class="text-saffron-600">Amazing cultural share! 🌟</p>
+                            <p class="font-semibold text-saffron-700">anita_b <span class="text-sm text-saffron-500">• 2h</span></p>
+                            <p class="text-saffron-600">Amazing cultural share! 🌟 Love the colors.</p>
                         </div>
+                        <button title="Like comment" class="text-xs text-gray-500 hover:text-red-500"><i class="far fa-heart"></i> 5</button>
                     </div>
                     <div class="flex space-x-3">
                         <img src="https://via.placeholder.com/30/ea580c/ffffff?text=R" class="w-8 h-8 rounded-full"
@@ -351,206 +529,285 @@
                         <div class="flex-1">
                             <p class="font-semibold text-saffron-700">raj_k <span class="text-sm text-saffron-500">•
                                     1h</span></p>
-                            <p class="text-saffron-600">Love the saffron vibes!</p>
+                            <p class="text-saffron-600">Love the saffron vibes! Reminds me of home festivals.</p>
                         </div>
+                        <button title="Like comment" class="text-xs text-gray-500 hover:text-red-500"><i class="far fa-heart"></i>
+                            12</button>
+                    </div>
+                    <div class="flex space-x-3">
+                        <img src="https://via.placeholder.com/30/c2410c/ffffff?text=P" class="w-8 h-8 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">priya_d <span class="text-sm text-saffron-500">•
+                                    45m</span></p>
+                            <p class="text-saffron-600">Beautiful embroidery! Tutorial please? 💖</p>
+                        </div>
+                        <button title="Like comment" class="text-xs text-gray-500 hover:text-red-500"><i class="far fa-heart"></i> 8</button>
+                    </div>
+                    <div class="flex space-x-3">
+                        <img src="https://via.placeholder.com/30/9a3412/ffffff?text=K" class="w-8 h-8 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">kumar_s <span class="text-sm text-saffron-500">•
+                                    30m</span></p>
+                            <p class="text-saffron-600">Inspiring! #BanjaraPride all the way.</p>
+                        </div>
+                        <button title="Like comment" class="text-xs text-gray-500 hover:text-red-500"><i class="far fa-heart"></i> 3</button>
+                    </div>
+                    <div class="flex space-x-3">
+                        <img src="https://via.placeholder.com/30/7c2d12/ffffff?text=M" class="w-8 h-8 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">meera_l <span class="text-sm text-saffron-500">•
+                                    10m</span></p>
+                            <p class="text-saffron-600">This captures the essence perfectly. More like this!</p>
+                        </div>
+                        <button title="Like comment" class="text-xs text-gray-500 hover:text-red-500"><i class="far fa-heart"></i> 7</button>
                     </div>
                 </div>
                 <div class="p-4 border-t border-saffron-200">
                     <div class="flex">
                         <input type="text" placeholder="Add a comment..."
                             class="flex-1 p-2 border border-saffron-300 rounded focus:outline-none focus:ring-2 focus:ring-saffron-500">
-                        <button class="ml-2 text-saffron-500 font-semibold hover:text-saffron-600">Post</button>
+                        <button onclick="postComment()"
+                            class="ml-2 text-saffron-500 font-semibold hover:text-saffron-600">Post</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- PWA Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered')).catch(err => console.log('SW failed'));
-            });
-        }
-    </script>
-
-    <script>
-        let isLoggedIn = false;
-        let likedPosts = new Set(); // For persistent likes (no toggle reset on reload)
-        const dummyPosts = [
-            { id: 1, user: 'rajesh_k', avatar: 'https://via.placeholder.com/40/f97316/ffffff?text=R', img: 'https://via.placeholder.com/300x300/f97316/ffffff?text=Banjara+Art', caption: 'Embracing our heritage with vibrant threads! #BanjaraPride', likes: 120, comments: 15 },
-            { id: 2, user: 'priya_d', avatar: 'https://via.placeholder.com/40/ea580c/ffffff?text=P', img: 'https://via.placeholder.com/300x300/ea580c/ffffff?text=Dance', caption: 'Traditional steps under the stars 🌙 #NomadLife', likes: 89, comments: 8 },
-            { id: 3, user: 'anita_b', avatar: 'https://via.placeholder.com/40/c2410c/ffffff?text=A', img: 'https://via.placeholder.com/300x300/c2410c/ffffff?text=Story', caption: 'Stories from the road – whatiss yours? #Connect', likes: 200, comments: 25 }
-        ];
-
-        // Auth
-        document.getElementById('phoneInput').addEventListener('input', (e) => {
-            document.getElementById('sendOtpBtn').disabled = e.target.value.length !== 10;
-        });
-        function sendOTP() {
-            document.getElementById('sendOtpBtn').classList.add('hidden');
-            document.getElementById('otpSection').classList.remove('hidden');
-        }
-        function verifyOTP() {
-            if (document.getElementById('otpInput').value === '123456') {
-                isLoggedIn = true;
-                document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('app').classList.remove('hidden');
-                loadFeed();
-            } else {
-                alert('Invalid OTP. Use 123456');
+        <!-- PWA Service Worker -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered')).catch(err => console.log('SW failed'));
+                });
             }
-        }
-        function signUp() { alert('Signup integrated with community verification – coming soon!'); }
+        </script>
 
-        // Navigation
-        function showPage(page) {
-            document.querySelectorAll('#app > section:not(#feed), #feed').forEach(el => el.classList.add('hidden'));
-            if (page === 'feed') document.getElementById('feed').classList.remove('hidden');
-            else document.getElementById(page).classList.remove('hidden');
-            document.getElementById('topNav').classList.add('hidden');
-            // Smooth scroll for reels
-            if (page === 'reels') document.getElementById('reelsContainer').scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        <script>
+            let isLoggedIn = false;
+            let likedPosts = new Set();
+            let currentUsername = '';
+            let profileImage = '';
+            const dummyPosts = [
+                { id: 1, user: 'rajesh_k', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face', img: 'https://images.pexels.com/photos/207662/pexels-photo-207662.jpeg?auto=compress&cs=tinysrgb&w=600', caption: 'Embracing heritage with vibrant threads! #BanjaraPride', likes: 120, shares: 15, saves: 8, comments: 25 },
+                { id: 2, user: 'priya_d', avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face', img: 'https://images.pexels.com/photos/1300403/pexels-photo-1300403.jpeg?auto=compress&cs=tinysrgb&w=600', caption: 'Traditional steps under the stars 🌙 #NomadLife', likes: 89, shares: 12, saves: 5, comments: 18 },
+                { id: 3, user: 'anita_b', avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face', img: 'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=600', caption: 'Stories from the road – whats yours? #Connect', likes: 200, shares: 30, saves: 12, comments: 35 },
+                { id: 4, user: 'kumar_s', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face', img: 'https://images.pexels.com/photos/207663/pexels-photo-207663.jpeg?auto=compress&cs=tinysrgb&w=600', caption: 'Festival vibes in saffron! #BanjaraFest', likes: 150, shares: 20, saves: 9, comments: 28 },
+                { id: 5, user: 'meera_l', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face', img: 'https://images.pexels.com/photos/1300404/pexels-photo-1300404.jpeg?auto=compress&cs=tinysrgb&w=600', caption: 'Nomad art and soul 💖 #Heritage', likes: 175, shares: 25, saves: 10, comments: 32 }
+            ];
 
-        // Feed
-        function loadFeed() {
-            const feed = document.getElementById('postsFeed');
-            feed.innerHTML = '';
-            dummyPosts.forEach(post => {
-                const isLiked = likedPosts.has(post.id);
-                const postEl = document.createElement('article');
-                postEl.className = 'bg-white rounded-lg shadow-sm overflow-hidden';
-                postEl.innerHTML = `
-                    <div class="p-3 border-b border-saffron-200 flex items-center">
-                        <img src="${post.avatar}" class="w-8 h-8 rounded-full mr-2" alt="User">
-                        <h3 class="font-semibold text-saffron-700">${post.user}</h3>
-                        <button class="ml-auto p-1 hover:bg-saffron-100 rounded-full transition"><i class="fas fa-ellipsis-vertical text-saffron-600"></i></button>
-                    </div>
-                    <img src="${post.img}" class="w-full post-img cursor-pointer hover:brightness-90 transition" alt="Post" onclick="openComments(${post.id})">
-                    <div class="p-3 space-y-2">
-                        <div class="flex items-center space-x-3">
-                            <button onclick="likePost(${post.id}, this)" class="like-heart ${isLiked ? 'liked fas' : 'far'} fa-heart text-lg"></button>
-                            <button onclick="openComments(${post.id})"><i class="far fa-comment text-lg hover:scale-110 transition"></i></button>
-                            <i class="far fa-paper-plane text-lg hover:scale-110 transition"></i>
-                            <button class="ml-auto hover:bg-saffron-100 rounded-full p-1 transition"><i class="far fa-bookmark text-lg"></i></button>
-                        </div>
-                        <p class="font-semibold text-saffron-700">${post.likes + (isLiked ? 1 : 0)} likes</p>
-                        <p class="font-semibold text-saffron-700">${post.user} ${post.caption}</p>
-                        <p class="text-sm text-saffron-600">${post.comments} comments</p>
-                        <p class="text-xs text-saffron-400">2 hours ago</p>
-                    </div>
-                `;
-                feed.appendChild(postEl);
+            // Profile Upload Preview
+            document.getElementById('profileImageInput').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        document.getElementById('profilePreview').innerHTML = `<img src="${ev.target.result}" class="w-full h-full object-cover rounded-full">`;
+                        document.getElementById('profilePreview').classList.remove('hidden');
+                        profileImage = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
-        }
-        function likePost(id, el) {
-            if (likedPosts.has(id)) {
-                likedPosts.delete(id);
-                el.classList.remove('liked', 'fas');
-                el.classList.add('far');
-            } else {
-                likedPosts.add(id);
-                el.classList.add('liked', 'fas');
-                el.classList.remove('far');
-            }
-            loadFeed(); // Refresh to update count
-        }
-        function openComments(id) {
-            document.getElementById('commentsModal').classList.remove('hidden');
-        }
-        function closeComments() {
-            document.getElementById('commentsModal').classList.add('hidden');
-        }
 
-        // Search
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const results = document.getElementById('searchResults');
-            if (query) {
-                results.innerHTML = dummyPosts.filter(post => post.caption.toLowerCase().includes(query)).map(post => `
-                    <div class="bg-white rounded-lg p-4 shadow-sm cursor-pointer hover:bg-saffron-50 transition">
-                        <img src="${post.img}" class="w-16 h-16 rounded object-cover mr-3" alt="Post">
-                        <div>
+            // Auth
+            document.getElementById('phoneInput').addEventListener('input', (e) => {
+                document.getElementById('sendOtpBtn').disabled = e.target.value.length !== 10;
+            });
+            function sendOTP() {
+                currentUsername = document.getElementById('usernameInput').value || 'User';
+                document.getElementById('sendOtpBtn').classList.add('hidden');
+                document.getElementById('otpSection').classList.remove('hidden');
+            }
+            function verifyOTP() {
+                if (document.getElementById('otpInput').value === '123456') {
+                    isLoggedIn = true;
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('app').classList.remove('hidden');
+                    loadFeed();
+                } else {
+                    alert('Invalid OTP. Use 123456');
+                }
+            }
+            function signUp() { alert('Signup with community verification – demo login used!'); verifyOTP(); }
+
+            // Modals
+            function showCreateModal() {
+                document.getElementById('createModal').classList.remove('hidden');
+            }
+            function closeCreateModal() {
+                document.getElementById('createModal').classList.add('hidden');
+            }
+            function showNotifications() {
+                document.getElementById('notificationsModal').classList.remove('hidden');
+            }
+            function createReel() { alert('Reel creation modal opens with video upload'); closeCreateModal(); }
+            function uploadStory() { alert('Story upload starts with photo/video select'); closeCreateModal(); }
+            function createPost() { alert('Post creation with photo upload and caption'); closeCreateModal(); }
+
+            // Navigation
+            function showPage(page) {
+                document.querySelectorAll('#app > section:not(#feed), #feed').forEach(el => el.classList.add('hidden'));
+                if (page === 'feed') {
+                    document.getElementById('feed').classList.remove('hidden');
+                    document.getElementById('homeHeader').classList.remove('hidden');
+                    document.getElementById('topNav').classList.add('hidden');
+                } else {
+                    document.getElementById(page).classList.remove('hidden');
+                    document.getElementById('homeHeader').classList.add('hidden');
+                    document.getElementById('topNav').classList.remove('hidden');
+                    document.getElementById('topTitle').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+                }
+            }
+
+            // Feed with External Images
+            function loadFeed() {
+                const feed = document.getElementById('postsFeed');
+                feed.innerHTML = '';
+                dummyPosts.forEach(post => {
+                    const isLiked = likedPosts.has(post.id);
+                    const postEl = document.createElement('article');
+                    postEl.className = 'bg-white rounded-lg shadow-sm overflow-hidden';
+                    postEl.innerHTML = `
+                        <div class="p-3 border-b border-saffron-200 flex items-center">
+                            <img src="${post.avatar}" class="w-8 h-8 rounded-full mr-2" alt="User">
                             <h3 class="font-semibold text-saffron-700">${post.user}</h3>
-                            <p class="text-saffron-600">${post.caption.substring(0, 50)}...</p>
+                <button title="More options" class="ml-auto p-1 hover:bg-saffron-100 rounded-full transition"><i class="fas fa-ellipsis-vertical text-saffron-600"></i></button>
                         </div>
-                    </div>
-                `).join('');
-            } else {
-                results.innerHTML = `
-                    <div class="text-center text-saffron-500 py-8">
-                        <i class="fas fa-search text-4xl mb-2"></i>
-                        <p>Search for people, posts, and stories</p>
-                    </div>
+                        <img src="${post.img}" class="w-full post-img cursor-pointer hover:brightness-90 transition" alt="Post" onclick="openComments(${post.id})">
+                        <div class="p-3 space-y-2">
+                            <div class="flex items-center space-x-3">
+                    <button onclick="likePost(${post.id}, this)" title="Like" class="like-heart ${isLiked ? 'liked fas' : 'far'} fa-heart text-lg"></button>
+                                <button onclick="openComments(${post.id})" title="Comment"><i class="far fa-comment text-lg hover:scale-110 transition"></i></button>
+                                <button onclick="sharePost(${post.id})" title="Share"><i class="far fa-paper-plane text-lg hover:scale-110 transition"></i></button>
+                                <button onclick="savePost(${post.id})" title="Save" class="ml-auto hover:bg-saffron-100 rounded-full p-1 transition"><i class="far fa-bookmark text-lg"></i></button>
+                            </div>
+                            <p class="font-semibold text-saffron-700">${post.likes + (isLiked ? 1 : 0)} likes</p>
+                            <p class="font-semibold text-saffron-700">${post.user} ${post.caption}</p>
+                            <p class="text-sm text-saffron-600">${post.comments} comments • ${post.shares} shares • ${post.saves} saves</p>
+                            <p class="text-xs text-saffron-400">2 hours ago</p>
+                        </div>
+                    `;
+                    feed.appendChild(postEl);
+                });
+            }
+            function likePost(id, el) {
+                if (likedPosts.has(id)) likedPosts.delete(id); else likedPosts.add(id);
+                loadFeed();
+            }
+            function sharePost(id) { alert(`Shared post ${id}!`); }
+            function savePost(id) { alert(`Saved post ${id}!`); }
+            function openComments(id) {
+                document.getElementById('commentsModal').classList.remove('hidden');
+            }
+            function closeComments() {
+                document.getElementById('commentsModal').classList.add('hidden');
+            }
+            function postComment() { alert('Comment posted!'); }
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const results = document.getElementById('searchResults');
+                if (query) {
+                    results.innerHTML = dummyPosts.filter(post => post.caption.toLowerCase().includes(query)).map(post => `
+                        <div class="bg-white rounded-lg p-4 shadow-sm cursor-pointer hover:bg-saffron-50 transition" onclick="openComments(${post.id})">
+                            <img src="${post.img}" class="w-16 h-16 rounded object-cover mr-3" alt="Post">
+                            <div>
+                                <h3 class="font-semibold text-saffron-700">${post.user}</h3>
+                                <p class="text-saffron-600">${post.caption.substring(0, 50)}...</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    results.innerHTML = `<div class="text-center text-saffron-500 py-8"><i class="fas fa-search text-4xl mb-2"></i><p>Search for people, posts, and stories</p></div>`;
+                }
+            });
+
+            // Messages & Groups
+            function showNewChat() { alert('Start new chat or group'); }
+            function openGroupChat(group) {
+                document.getElementById('chatTitle').textContent = group;
+                document.getElementById('chatHeader').innerHTML = `<i class="fas fa-users text-saffron-500 mr-3"></i><h3>${group}</h3>`;
+                openChat(group, true);
+            }
+            function openDM(user) {
+                document.getElementById('chatTitle').textContent = user;
+                document.getElementById('chatHeader').innerHTML = `<img src="https://via.placeholder.com/40/f97316/ffffff?text=${user.charAt(0)}" class="w-10 h-10 rounded-full mr-3" alt="User"><h3>${user}</h3>`;
+                openChat(user, false);
+            }
+            function openChat(title, isGroup) {
+                document.getElementById('chatView').classList.remove('hidden');
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="text-center text-saffron-500 text-sm mb-4">Start of ${isGroup ? 'group' : 'chat'} conversation</div>
                 `;
             }
-        });
-
-        // Messages
-        function openDM() {
-            document.getElementById('dmView').classList.remove('hidden');
-        }
-        function closeDM() {
-            document.getElementById('dmView').classList.add('hidden');
-        }
-        document.querySelector('#dmView input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const msg = e.target.value;
+            function closeChat() {
+                document.getElementById('chatView').classList.add('hidden');
+            }
+            function sendChatMessage() {
+                const input = document.getElementById('chatInput');
+                const msg = input.value.trim();
                 if (msg) {
                     const messages = document.getElementById('chatMessages');
                     const newMsg = document.createElement('div');
                     newMsg.className = 'chat-bubble bg-saffron-500 text-white p-3 rounded-2xl ml-auto';
                     newMsg.textContent = msg;
                     messages.appendChild(newMsg);
-                    e.target.value = '';
+                    input.value = '';
                     messages.scrollTop = messages.scrollHeight;
                 }
             }
-        });
-        document.querySelector('#dmView button:last-child').addEventListener('click', () => {
-            document.querySelector('#dmView input').dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter' }));
-        });
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendChatMessage();
+            });
 
-        // Random Chat
-        async function startRandomVideo() {
-            const btn = event.target;
-            btn.classList.add('hidden');
-            btn.innerHTML += '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></div>'; // Spinner
-            setTimeout(async () => {
-                document.getElementById('videoChatArea').classList.remove('hidden');
-                // Dummy camera toggle
-                const localVid = document.createElement('video');
-                localVid.srcObject = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }).catch(() => null);
-                if (localVid.srcObject) {
-                    document.querySelector('.video-chat:first-child').innerHTML = '';
-                    localVid.classList.add('w-full', 'h-full', 'rounded-xl');
-                    localVid.autoplay = true;
-                    document.querySelector('.video-chat:first-child').appendChild(localVid);
-                }
-            }, 1500);
-        }
-        function endRandomVideo() {
-            document.getElementById('videoChatArea').classList.add('hidden');
-            document.querySelector('#randomchat button').classList.remove('hidden');
-            // Stop streams
-            const videos = document.querySelectorAll('video');
-            videos.forEach(v => v.srcObject?.getTracks().forEach(t => t.stop()));
-        }
+            // Reels Functions
+            function likeReel(el) { el.classList.toggle('text-red-500'); }
+            function commentReel() { alert('Comment on reel'); }
+            function shareReel() { alert('Share reel'); }
 
-        // Utils
-        function goBack() { showPage('feed'); }
+            // Random Chat
+            async function startRandomVideo() {
+                const btn = event.target;
+                btn.textContent = 'Connecting...';
+                btn.disabled = true;
+                setTimeout(async () => {
+                    document.getElementById('videoChatArea').classList.remove('hidden');
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                        const localVid = document.createElement('video');
+                        localVid.srcObject = stream;
+                        localVid.autoplay = true;
+                        localVid.classList.add('w-full', 'h-full', 'object-cover', 'rounded-xl');
+                        document.querySelector('.video-chat:first-child').innerHTML = '';
+                        document.querySelector('.video-chat:first-child').appendChild(localVid);
+                    } catch (err) {
+                        console.log('Camera access denied');
+                    }
+                }, 1500);
+            }
+            function endRandomVideo() {
+                document.getElementById('videoChatArea').classList.add('hidden');
+                const btn = document.querySelector('#randomchat button');
+                btn.textContent = 'Start Chat';
+                btn.disabled = false;
+                const videos = document.querySelectorAll('video');
+                videos.forEach(v => v.srcObject?.getTracks().forEach(t => t.stop()));
+            }
 
-        // PWA Install Prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Show install button if needed
-        });
-        // To trigger install: deferredPrompt.prompt();
-    </script>
+            // Utils
+            function goBack() { showPage('feed'); }
+
+            // PWA Install
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+            });
+        </script>
 </body>
 
 </html>
