@@ -118,38 +118,37 @@
     <!-- Login Page -->
     <div id="loginPage"
         class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-saffron-50 to-white">
-        <div class="w-full max-w-md text-center">
-            <img id="logo" src="BConnect_logo.png" alt="Banjara Connect Logo" class="mx-auto mb-6">
-            <!-- Upload your formatted logo.png -->
-            <div class="space-y-4">
-                <input type="text" id="usernameInput" placeholder="Choose Username (Optional)"
-                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
-                <input type="file" id="profileImageInput" accept="image/*" class="hidden">
-                <button onclick="document.getElementById('profileImageInput').click()"
-                    class="w-full bg-saffron-100 text-saffron-600 py-3 rounded-md font-semibold hover:bg-saffron-200 transition">Upload
-                    Profile Photo (Optional)</button>
-                <div id="profilePreview"
-                    class="hidden mx-auto w-20 h-20 rounded-full bg-saffron-200 flex items-center justify-center overflow-hidden border-2 border-saffron-300">
-                    <i class="fas fa-user text-saffron-500 text-3xl"></i>
-                </div>
+        <div class="space-y-4">
+            <input type="text" id="usernameInput" placeholder="Choose Username (Optional)"
+                class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
+            <input type="file" id="profileImageInput" accept="image/*" class="hidden">
+            <button onclick="document.getElementById('profileImageInput').click()"
+                class="w-full bg-saffron-100 text-saffron-600 py-3 rounded-md font-semibold hover:bg-saffron-200 transition">Upload
+                Profile Photo (Optional)</button>
+            <div id="profilePreview"
+                class="hidden mx-auto w-20 h-20 rounded-full bg-saffron-200 flex items-center justify-center overflow-hidden border-2 border-saffron-300">
+                <i class="fas fa-user text-saffron-500 text-3xl"></i>
+            </div>
+        
+            <!-- Wrap phone in section to hide -->
+            <div id="phoneSection">
                 <input type="tel" id="phoneInput" placeholder="Mobile Number (10 digits only)" maxlength="10"
                     class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500"
                     oninput="checkPhone()">
                 <button onclick="sendOTP()" id="sendOtpBtn"
                     class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50 hover:shadow-lg transition disabled:cursor-not-allowed"
                     disabled>Next</button>
-                <div id="otpSection" class="hidden space-y-4">
-                    <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
-                        class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500 text-center">
-                    <p class="text-xs text-saffron-600 text-center">Demo: Use 123456</p>
-                    <button onclick="verifyOTP()"
-                        class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold hover:shadow-lg transition">Log
-                        In</button>
-                </div>
             </div>
-            <p class="text-center mt-4 text-xs text-saffron-600">New here? <button onclick="signUp()"
-                    class="text-saffron-500 font-semibold hover:underline">Sign up</button></p>
+        
+            <div id="otpSection" class="hidden space-y-4">
+                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
+                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500 text-center">
+                <p class="text-xs text-saffron-600 text-center">Demo: Use 123456</p>
+                <button onclick="verifyOTP()"
+                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold hover:shadow-lg transition">Log
+                    In</button>
             </div>
+        </div>
 
 
     <!-- Main App -->
@@ -456,16 +455,12 @@
         let currentPage = 'feed';
 
         // Login functions
-        function checkPhone() {
-                const phone = document.getElementById('phoneInput').value.replace(/\D/g, ''); // Strip non-digits
-                const btn = document.getElementById('sendOtpBtn');
-                const isValid = phone.length === 10;
-                btn.disabled = !isValid;
-                btn.style.opacity = isValid ? '1' : '0.5';
-                btn.style.cursor = isValid ? 'pointer' : 'not-allowed';
-                if (isValid) {
-                    console.log('Button enabled! Phone:', phone); // Debug log
-                }
+        function sendOTP() {
+                const phoneSection = document.getElementById('phoneSection');
+                const otpSection = document.getElementById('otpSection');
+                currentUsername = document.getElementById('usernameInput').value || 'User'; // Save username
+                phoneSection.style.display = 'none'; // Hide phone section
+                otpSection.classList.remove('hidden'); // Show OTP
             }
 
             // No need for addEventListener if using oninput; but add for safety
