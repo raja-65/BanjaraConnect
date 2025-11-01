@@ -4,31 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banjara Connect</title>
+    <title>Banjara Connect - Instagram-Style Social</title>
+    <!-- PWA Meta -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f97316">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Banjara Connect">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: { extend: { colors: { saffron: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c' } } } }
+            theme: {
+                extend: {
+                    colors: {
+                        saffron: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        }
+                    }
+                }
+            }
         }
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #f97316 0%, #fff7ed 100%);
+        .story-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: linear-gradient(45deg, #f97316, #fb923c);
         }
 
-        .post-card {
-            transition: transform 0.3s ease;
-        }
-
-        .post-card:hover {
-            transform: translateY(-4px);
+        .post-img {
+            aspect-ratio: 1;
+            object-fit: cover;
         }
 
         .reel-video {
@@ -44,432 +70,486 @@
             background: #000;
             border-radius: 12px;
         }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #f97316 0%, #fb923c 25%, #ea580c 50%, #c2410c 75%, #9a3412 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .like-heart {
+            transition: all 0.2s ease;
+        }
+
+        .like-heart.liked {
+            color: #ef4444 !important;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-saffron-50 to-white min-h-screen">
-    <!-- Login -->
-    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border-4 border-saffron-400">
+<body class="bg-saffron-50 text-saffron-700 min-h-screen">
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4 bg-white">
+        <div class="w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="text-6xl mb-4">🎭</div>
-                <h1
-                    class="text-4xl font-bold bg-gradient-to-r from-saffron-600 to-saffron-400 bg-clip-text text-transparent mb-2">
-                    Banjara Connect</h1>
-                <p class="text-saffron-600 font-semibold">जुड़िये अपनी जड़ों से</p>
+                <i class="fas fa-compass text-6xl mb-4 text-gradient-text"></i>
+                <h1 class="text-4xl font-bold text-saffron-700 mb-2">Banjara Connect</h1>
+                <p class="text-sm text-saffron-600">Connect with your roots</p>
             </div>
-            <div id="phoneForm">
-                <label class="block text-saffron-700 font-semibold mb-2">Mobile Number</label>
-                <input type="tel" id="mobileInput" maxlength="10" placeholder="Enter 10-digit mobile"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-saffron-300 focus:border-saffron-500 focus:outline-none">
-                <button onclick="sendOTP()"
-                    class="w-full mt-4 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition disabled:opacity-50"
-                    disabled>Send OTP</button>
+            <div class="space-y-4">
+                <input type="tel" id="phoneInput" placeholder="Mobile Number" maxlength="10"
+                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                <button onclick="sendOTP()" id="sendOtpBtn"
+                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50"
+                    disabled>Next</button>
+                <div id="otpSection" class="hidden space-y-4">
+                    <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
+                        class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500 text-center">
+                    <p class="text-xs text-saffron-600 text-center">Demo: Use 123456</p>
+                    <button onclick="verifyOTP()"
+                        class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold">Log
+                        In</button>
+                </div>
             </div>
-            <div id="otpForm" class="hidden">
-                <label class="block text-saffron-700 font-semibold mb-2">Enter OTP</label>
-                <input type="text" id="otpInput" maxlength="4" placeholder="Enter 4-digit OTP (1234)"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-saffron-300 focus:border-saffron-500 focus:outline-none text-center text-2xl tracking-widest">
-                <p class="text-sm text-saffron-600 mt-2">Demo OTP: 1234</p>
-                <button onclick="handleLogin()"
-                    class="w-full mt-4 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition">Login</button>
-                <button onclick="backToPhone()" class="w-full mt-2 text-saffron-600 py-2 font-semibold">Change
-                    Number</button>
+            <p class="text-center mt-4 text-xs text-saffron-600">New here? <button onclick="signUp()"
+                    class="text-saffron-500 font-semibold">Sign up</button></p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="hidden min-h-screen bg-saffron-50">
+        <!-- Top Nav (for non-bottom nav pages) -->
+        <nav id="topNav"
+            class="hidden fixed top-0 left-0 right-0 bg-white border-b border-saffron-200 z-50 px-4 py-2 flex items-center justify-between shadow-sm">
+            <button onclick="goBack()" title="Go back"><i class="fas fa-arrow-left text-saffron-600"></i></button>
+            <h1 id="topTitle" class="font-semibold text-saffron-700">Banjara Connect</h1>
+            <button title="More options"><i class="fas fa-ellipsis-vertical text-saffron-600"></i></button>
+        </nav>
+
+        <!-- Stories & Feed -->
+        <main id="feed" class="pt-16 pb-16">
+            <!-- Stories -->
+            <div class="bg-white border-b border-saffron-200 px-4 py-2 overflow-x-auto whitespace-nowrap shadow-sm">
+                <div class="inline-flex space-x-2">
+                    <div
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        YT</div>
+                    <div
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        You</div>
+                    <div
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        Rajesh</div>
+                    <div
+                        class="story-circle inline-block flex items-center justify-center text-white font-semibold text-sm">
+                        Priya</div>
+                    <!-- Add more dummy stories -->
+                </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div id="postsFeed" class="space-y-2">
+                <!-- Dummy posts loaded by JS -->
+            </div>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav
+            class="fixed bottom-0 left-0 right-0 bg-white border-t border-saffron-200 flex justify-around py-2 z-50 shadow-lg">
+            <button onclick="showPage('feed')"
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition">
+                <i class="fas fa-home text-saffron-600 text-lg"></i>
+                <span class="text-saffron-600">Home</span>
+            </button>
+            <button onclick="showPage('search')"
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition">
+                <i class="fas fa-search text-saffron-600 text-lg"></i>
+                <span class="text-saffron-600">Search</span>
+            </button>
+            <button onclick="showPage('reels')"
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition">
+                <i class="fas fa-video text-saffron-600 text-lg"></i>
+                <span class="text-saffron-600">Reels</span>
+            </button>
+            <button onclick="showPage('messages')"
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition">
+                <i class="far fa-comment text-saffron-600 text-lg"></i>
+                <span class="text-saffron-600">Messages</span>
+            </button>
+            <button onclick="showPage('randomchat')"
+                class="flex flex-col items-center text-xs p-2 bg-gradient-to-r from-saffron-500 to-saffron-600 rounded-full p-3 text-white shadow-lg active:scale-95 transition">
+                <i class="fas fa-video text-lg"></i>
+                <span class="text-xs">Random</span>
+            </button>
+        </nav>
+
+        <!-- Search Page -->
+        <section id="search" class="hidden min-h-screen pt-16 pb-16 bg-saffron-50">
+            <div class="bg-white p-2 border-b border-saffron-200 shadow-sm">
+                <div class="flex">
+                    <input type="text" id="searchInput" placeholder="Search Banjara stories..."
+                        class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                    <button class="ml-2 p-3 bg-saffron-100 rounded-full" title="Filter"><i
+                            class="fas fa-sliders-h text-saffron-600"></i></button>
+                </div>
+            </div>
+            <div id="searchResults" class="p-4 space-y-4">
+                <!-- Dynamic results -->
+            </div>
+        </section>
+
+        <!-- Reels Page -->
+        <section id="reels" class="hidden min-h-screen bg-saffron-900">
+            <div id="reelsContainer" class="h-screen overflow-y-auto snap-y snap-mandatory">
+                <div class="relative h-screen snap-center flex items-center justify-center text-white">
+                    <video class="reel-video w-full absolute inset-0 object-cover"
+                        src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" loop muted playsinline
+                        autoplay></video>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
+                        <p class="font-bold text-xl">Banjara Dance Reel</p>
+                        <div class="flex space-x-4">
+                            <i class="fas fa-heart text-2xl hover:scale-110 transition"></i>
+                            <i class="fas fa-comment text-2xl hover:scale-110 transition"></i>
+                            <i class="fas fa-share text-2xl hover:scale-110 transition"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative h-screen snap-center flex items-center justify-center text-white">
+                    <video class="reel-video w-full absolute inset-0 object-cover"
+                        src="https://www.w3schools.com/html/mov_bbb.mp4" loop muted playsinline autoplay></video>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10">
+                        <p class="font-bold text-xl">Cultural Stories</p>
+                        <div class="flex space-x-4">
+                            <i class="fas fa-heart text-2xl hover:scale-110 transition"></i>
+                            <i class="fas fa-comment text-2xl hover:scale-110 transition"></i>
+                            <i class="fas fa-share text-2xl hover:scale-110 transition"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Messages Page -->
+        <section id="messages" class="hidden min-h-screen pt-16 pb-16 bg-saffron-50">
+            <div class="bg-white p-4 border-b border-saffron-200 shadow-sm flex items-center">
+                <input type="text" placeholder="Search messages"
+                    class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                <i class="fas fa-edit ml-4 text-saffron-600"></i>
+            </div>
+            <div id="dmList" class="space-y-2 p-4">
+                <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
+                    onclick="openDM()">
+                    <img src="https://via.placeholder.com/50/f97316/ffffff?text=R" class="w-12 h-12 rounded-full"
+                        alt="User">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-saffron-700">rajesh_k</h3>
+                        <p class="text-sm text-saffron-600">Hey! Share your story?</p>
+                    </div>
+                    <div class="text-xs text-saffron-400">2m</div>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow-sm flex items-center space-x-3 cursor-pointer hover:bg-saffron-50 transition"
+                    onclick="openDM()">
+                    <img src="https://via.placeholder.com/50/ea580c/ffffff?text=P" class="w-12 h-12 rounded-full"
+                        alt="User">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-saffron-700">priya_d</h3>
+                        <p class="text-sm text-saffron-600">Loved your post!</p>
+                    </div>
+                    <div class="text-xs text-saffron-400">1h</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DM Chat View -->
+        <div id="dmView" class="hidden fixed inset-0 bg-white z-50">
+            <div class="flex flex-col h-full">
+                <div class="bg-white p-4 border-b border-saffron-200 shadow-sm flex items-center">
+                    <button onclick="closeDM()" title="Back"><i class="fas fa-arrow-left mr-2 text-saffron-600"></i></button>
+                    <img src="https://via.placeholder.com/40/f97316/ffffff?text=R" class="w-10 h-10 rounded-full mr-3"
+                        alt="User">
+                    <h3 class="font-semibold text-saffron-700">rajesh_k</h3>
+                    <div class="ml-auto flex space-x-2">
+                        <i class="fas fa-phone text-saffron-500"></i>
+                        <i class="fas fa-video text-saffron-500"></i>
+                        <i class="fas fa-ellipsis-vertical text-saffron-600"></i>
+                    </div>
+                </div>
+                <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-saffron-50">
+                    <div class="chat-bubble bg-saffron-500 text-white p-3 rounded-2xl ml-auto">Hello from Banjara!</div>
+                    <div class="chat-bubble bg-white p-3 rounded-2xl shadow-sm">Hi! How's the community?</div>
+                    <div class="chat-bubble bg-saffron-500 text-white p-3 rounded-2xl ml-auto">Great, sharing stories!
+                    </div>
+                </div>
+                <div class="p-4 border-t border-saffron-200">
+                    <div class="flex">
+                        <input type="text" placeholder="Type a message..."
+                            class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                        <button title="Send message" class="ml-2 p-3 bg-saffron-500 text-white rounded-full hover:shadow-md transition"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Random Video Chat -->
+        <section id="randomchat"
+            class="hidden min-h-screen pt-16 pb-16 bg-gradient-to-br from-saffron-500 to-saffron-600 flex items-center justify-center">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 text-center max-w-md w-full">
+                <i class="fas fa-users text-6xl text-saffron-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-saffron-700 mb-4">Random Banjara Chat</h2>
+                <p class="text-saffron-600 mb-6">Connect with community members instantly</p>
+                <button onclick="startRandomVideo()"
+                    class="bg-gradient-to-r from-saffron-500 to-saffron-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl transition transform hover:scale-105">Start
+                    Chat</button>
+                <div id="videoChatArea" class="hidden mt-6">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div
+                            class="video-chat flex flex-col items-center justify-center text-white text-lg bg-saffron-700 rounded-xl p-2">
+                            <i class="fas fa-user-circle text-6xl text-saffron-200 mb-2"></i>
+                            <p>You</p>
+                        </div>
+                        <div
+                            class="video-chat flex flex-col items-center justify-center text-white text-lg bg-gray-800 rounded-xl p-2">
+                            <i class="fas fa-user-friends text-6xl text-gray-400 mb-2"></i>
+                            <p>Community Member</p>
+                        </div>
+                    </div>
+                    <button onclick="endRandomVideo()"
+                        class="bg-saffron-700 text-white px-6 py-2 rounded-full font-semibold hover:bg-saffron-800 transition">End
+                        Chat</button>
+                    <p class="text-xs text-saffron-500 mt-2">Dummy demo - grant camera for real</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comments Modal -->
+        <div id="commentsModal"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+                <div class="p-4 border-b border-saffron-200 flex items-center">
+                    <img src="https://via.placeholder.com/40/f97316/ffffff?text=U" class="w-10 h-10 rounded-full mr-3"
+                        alt="User">
+                    <h3 class="font-semibold text-saffron-700">Post Comments</h3>
+                    <button onclick="closeComments()" title="Close comments" class="ml-auto p-2 hover:bg-saffron-100 rounded-full"><i
+                            class="fas fa-times text-saffron-600"></i></button>
+                </div>
+                <div id="commentsList" class="p-4 space-y-4">
+                    <div class="flex space-x-3">
+                        <img src="https://via.placeholder.com/30/f97316/ffffff?text=A" class="w-8 h-8 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">anita_b <span class="text-sm text-saffron-500">•
+                                    2h</span></p>
+                            <p class="text-saffron-600">Amazing cultural share! 🌟</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-3">
+                        <img src="https://via.placeholder.com/30/ea580c/ffffff?text=R" class="w-8 h-8 rounded-full"
+                            alt="User">
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">raj_k <span class="text-sm text-saffron-500">•
+                                    1h</span></p>
+                            <p class="text-saffron-600">Love the saffron vibes!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-saffron-200">
+                    <div class="flex">
+                        <input type="text" placeholder="Add a comment..."
+                            class="flex-1 p-2 border border-saffron-300 rounded focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                        <button class="ml-2 text-saffron-500 font-semibold hover:text-saffron-600">Post</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Nav -->
-    <nav id="nav"
-        class="hidden bg-gradient-to-r from-white to-saffron-50 border-b-4 border-saffron-400 sticky top-0 z-50 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-2">
-                    <span class="text-3xl">🎭</span>
-                    <span
-                        class="text-2xl font-bold bg-gradient-to-r from-saffron-600 to-saffron-400 bg-clip-text text-transparent">Banjara
-                        Connect</span>
-                </div>
-                <div class="hidden md:flex space-x-1">
-                    <button onclick="setPage('home')"
-                        class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100">
-                        <i class="fas fa-home"></i> Home </button>
-                    <button onclick="setPage('search')"
-                        class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100">
-                        <i class="fas fa-search"></i> Search </button>
-                    <button onclick="setPage('reels')"
-                        class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100">
-                        <i class="fas fa-video"></i> Reels </button>
-                    <button onclick="setPage('messages')"
-                        class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100">
-                        <i class="fas fa-message"></i> Messages </button>
-                    <button onclick="setPage('groups')"
-                        class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100">
-                        <i class="fas fa-users"></i> Groups </button>
-                    <button onclick="setPage('randomchat')"
-                        class="bg-saffron-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-saffron-600"> <i
-                            class="fas fa-phone"></i> Random Chat </button>
-                </div>
-                <button id="mobileMenuBtn" class="md:hidden text-saffron-600" title="Open Menu"> <i class="fas fa-bars"></i> </button>
-            </div>
-            <div id="mobileMenu" class="hidden md:hidden bg-white border-t-2 border-saffron-200 py-2">
-                <button onclick="setPage('home'); toggleMobileMenu()"
-                    class="w-full flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold text-saffron-700 hover:bg-saffron-100">
-                    <i class="fas fa-home"></i> Home </button>
-                <button onclick="setPage('search'); toggleMobileMenu()"
-                    class="w-full flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold text-saffron-700 hover:bg-saffron-100">
-                    <i class="fas fa-search"></i> Search </button>
-                <button onclick="setPage('reels'); toggleMobileMenu()"
-                    class="w-full flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold text-saffron-700 hover:bg-saffron-100">
-                    <i class="fas fa-video"></i> Reels </button>
-                <button onclick="setPage('messages'); toggleMobileMenu()"
-                    class="w-full flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold text-saffron-700 hover:bg-saffron-100">
-                    <i class="fas fa-message"></i> Messages </button>
-                <button onclick="setPage('groups'); toggleMobileMenu()"
-                    class="w-full flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold text-saffron-700 hover:bg-saffron-100">
-                    <i class="fas fa-users"></i> Groups </button>
-                <button onclick="setPage('randomchat'); toggleMobileMenu()"
-                    class="w-full bg-saffron-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-saffron-600"> <i
-                        class="fas fa-phone"></i> Random Chat </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Pages -->
-    <main class="pt-20 pb-20">
-        <section id="homePage" class="hidden container mx-auto px-4 max-w-2xl space-y-4">
-            <div class="bg-gradient-to-r from-saffron-400 to-saffron-500 rounded-2xl p-6 text-white shadow-xl">
-                <h2 class="text-2xl font-bold mb-2">Welcome to Banjara Connect! 🎉</h2>
-                <p>Connect with your community, share your culture, and celebrate together!</p>
-            </div>
-            <div id="posts" class="space-y-4">
-                <!-- Dummy posts will be inserted here by JS -->
-            </div>
-        </section>
-
-        <section id="searchPage" class="hidden min-h-screen p-4 max-w-2xl mx-auto space-y-4">
-            <div class="bg-white rounded-2xl shadow-lg p-4 border-2 border-saffron-200">
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-search text-saffron-600 text-xl"></i>
-                    <input type="text" id="searchInput" placeholder="Search people, posts, groups..."
-                        class="flex-1 outline-none text-lg">
-                </div>
-            </div>
-            <div id="searchResults" class="space-y-3">
-                <!-- Dummy users inserted by JS -->
-            </div>
-        </section>
-
-        <section id="reelsPage" class="hidden min-h-screen bg-black">
-            <div
-                class="max-w-md mx-auto h-screen bg-gradient-to-br from-saffron-900 to-saffron-600 relative flex items-center justify-center">
-                <div class="text-center text-white space-y-4">
-                    <i class="fas fa-play text-6xl"></i>
-                    <h3 class="text-2xl font-bold">Banjara Reels</h3>
-                    <p>Share your culture through short videos</p>
-                </div>
-                <div class="absolute right-4 bottom-20 space-y-6 text-white">
-                    <button class="flex flex-col items-center hover:scale-110 transition"> <i
-                            class="fas fa-heart text-2xl"></i> <span class="text-sm">45K</span> </button>
-                    <button class="flex flex-col items-center hover:scale-110 transition"> <i
-                            class="fas fa-comment text-2xl"></i> <span class="text-sm">234</span> </button>
-                    <button class="flex flex-col items-center hover:scale-110 transition"> <i
-                            class="fas fa-share text-2xl"></i> <span class="text-sm">Share</span> </button>
-                </div>
-            </div>
-        </section>
-
-        <section id="messagesPage"
-            class="hidden min-h-screen bg-gradient-to-br from-saffron-50 via-white to-saffron-100">
-            <div class="max-w-4xl mx-auto h-screen flex">
-                <div class="w-1/3 bg-white border-r-2 border-saffron-200 overflow-y-auto">
-                    <div class="p-4 border-b-2 border-saffron-200">
-                        <h2 class="text-xl font-bold text-saffron-800">Messages</h2>
-                    </div>
-                    <div id="chatList">
-                        <!-- Dummy chats inserted by JS -->
-                    </div>
-                </div>
-                <div id="chatView" class="flex-1 bg-white flex flex-col">
-                    <div class="flex-1 flex items-center justify-center text-gray-400">
-                        <div class="text-center">
-                            <i class="fas fa-comment text-5xl mb-4 text-saffron-300"></i>
-                            <p class="text-xl">Select a chat to start messaging</p>
-                        </div>
-                    </div>
-                    <div class="p-4 border-t-2 border-saffron-200 flex items-center space-x-2">
-                        <input type="text" id="messageInput" placeholder="Type a message..."
-                            class="flex-1 px-4 py-2 rounded-xl border-2 border-saffron-300 focus:border-saffron-500 outline-none">
-                        <button
-                            class="bg-gradient-to-r from-saffron-500 to-saffron-400 text-white p-3 rounded-xl hover:shadow-lg transition"
-                            title="Send Message">
-                            <i class="fas fa-paper-plane"></i> </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="groupsPage" class="hidden min-h-screen p-4 max-w-4xl mx-auto space-y-4">
-            <div class="bg-gradient-to-r from-saffron-400 to-saffron-500 rounded-2xl p-6 text-white shadow-xl">
-                <h2 class="text-2xl font-bold mb-2">Community Groups</h2>
-                <p>Join groups and connect with like-minded people</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-4">
-                <!-- Dummy groups inserted by JS -->
-            </div>
-        </section>
-
-        <section id="randomchatPage"
-            class="hidden min-h-screen bg-gradient-to-br from-saffron-900 via-saffron-600 to-saffron-500 flex items-center justify-center p-4">
-            <div class="max-w-4xl w-full">
-                <div id="searchingView"
-                    class="bg-white rounded-3xl shadow-2xl p-12 text-center border-4 border-saffron-400">
-                    <div class="text-8xl mb-6">📞</div>
-                    <h2 class="text-3xl font-bold text-saffron-800 mb-4">Random Video Chat</h2>
-                    <p class="text-gray-600 mb-8">Connect with random people from the Banjara community</p>
-                    <button id="startChatBtn" onclick="startRandomChat()"
-                        class="bg-gradient-to-r from-saffron-500 to-saffron-600 text-white px-12 py-4 rounded-2xl text-xl font-bold hover:shadow-2xl transform hover:scale-105 transition">Start
-                        Random Chat</button>
-                    <div id="searchingAnim" class="hidden space-y-4 mt-4">
-                        <div class="animate-pulse text-saffron-600 text-xl font-semibold">Searching for someone...</div>
-                        <div class="flex justify-center space-x-2">
-                            <div class="w-3 h-3 bg-saffron-500 rounded-full animate-bounce"
-                                style="animation-delay: 0s;"></div>
-                            <div class="w-3 h-3 bg-saffron-500 rounded-full animate-bounce"
-                                style="animation-delay: 0.2s;"></div>
-                            <div class="w-3 h-3 bg-saffron-500 rounded-full animate-bounce"
-                                style="animation-delay: 0.4s;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div id="chatView"
-                    class="hidden bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-saffron-400">
-                    <div
-                        class="bg-gradient-to-r from-saffron-500 to-saffron-600 p-4 flex items-center justify-between text-white">
-                        <div class="flex items-center space-x-3">
-                            <div class="text-2xl">👤</div>
-                            <div>
-                                <p class="font-bold">Random User</p>
-                                <p class="text-sm opacity-90">Connected</p>
-                            </div>
-                        </div>
-                        <button onclick="endRandomChat()"
-                            class="bg-red-500 px-4 py-2 rounded-xl font-semibold hover:bg-red-600 transition">End
-                            Call</button>
-                    </div>
-                    <div class="bg-gray-900 aspect-video flex items-center justify-center text-white text-xl">
-                        <div class="text-center">
-                            <i class="fas fa-video text-5xl mb-4"></i>
-                            <p>Video chat would appear here</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered')).catch(err => console.log('SW failed'));
+            });
+        }
+    </script>
 
     <script>
         let isLoggedIn = false;
-        let currentPage = 'home';
-        let otpSent = false;
-        const dummyUsers = [
-            { id: 1, name: 'Rajesh Kumar', avatar: '🎭', bio: 'Banjara culture enthusiast', followers: 234 },
-            { id: 2, name: 'Priya Devi', avatar: '🌺', bio: 'Traditional artist', followers: 567 },
-            { id: 3, name: 'Amit Singh', avatar: '🎨', bio: 'Folk music lover', followers: 890 },
-            { id: 4, name: 'Meera Bai', avatar: '💃', bio: 'Dance performer', followers: 432 }
-        ];
+        let likedPosts = new Set(); // For persistent likes (no toggle reset on reload)
         const dummyPosts = [
-            { id: 1, user: dummyUsers[0], content: 'Celebrating our rich Banjara heritage! 🎉', image: '🏔️', likes: 45, comments: 12, time: '2h ago' },
-            { id: 2, user: dummyUsers[1], content: 'Traditional embroidery patterns from my grandmother 💖', image: '🧵', likes: 78, comments: 23, time: '4h ago' },
-            { id: 3, user: dummyUsers[2], content: 'New folk song coming soon! Stay tuned 🎵', image: '🎼', likes: 92, comments: 34, time: '6h ago' }
+            { id: 1, user: 'rajesh_k', avatar: 'https://via.placeholder.com/40/f97316/ffffff?text=R', img: 'https://via.placeholder.com/300x300/f97316/ffffff?text=Banjara+Art', caption: 'Embracing our heritage with vibrant threads! #BanjaraPride', likes: 120, comments: 15 },
+            { id: 2, user: 'priya_d', avatar: 'https://via.placeholder.com/40/ea580c/ffffff?text=P', img: 'https://via.placeholder.com/300x300/ea580c/ffffff?text=Dance', caption: 'Traditional steps under the stars 🌙 #NomadLife', likes: 89, comments: 8 },
+            { id: 3, user: 'anita_b', avatar: 'https://via.placeholder.com/40/c2410c/ffffff?text=A', img: 'https://via.placeholder.com/300x300/c2410c/ffffff?text=Story', caption: 'Stories from the road – whatiss yours? #Connect', likes: 200, comments: 25 }
         ];
 
         // Auth
-        document.getElementById('mobileInput').addEventListener('input', () => {
-            document.querySelector('#phoneForm button').disabled = document.getElementById('mobileInput').value.length !== 10;
+        document.getElementById('phoneInput').addEventListener('input', (e) => {
+            document.getElementById('sendOtpBtn').disabled = e.target.value.length !== 10;
         });
         function sendOTP() {
-            otpSent = true;
-            document.getElementById('phoneForm').classList.add('hidden');
-            document.getElementById('otpForm').classList.remove('hidden');
+            document.getElementById('sendOtpBtn').classList.add('hidden');
+            document.getElementById('otpSection').classList.remove('hidden');
         }
-        function backToPhone() {
-            otpSent = false;
-            document.getElementById('otpForm').classList.add('hidden');
-            document.getElementById('phoneForm').classList.remove('hidden');
-            document.getElementById('mobileInput').value = '';
-            document.getElementById('otpInput').value = '';
-        }
-        function handleLogin() {
-            if (document.getElementById('otpInput').value === '1234') {
+        function verifyOTP() {
+            if (document.getElementById('otpInput').value === '123456') {
                 isLoggedIn = true;
                 document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('nav').classList.remove('hidden');
-                setPage('home');
-                loadHome();
+                document.getElementById('app').classList.remove('hidden');
+                loadFeed();
             } else {
-                alert('Invalid OTP. Use 1234');
+                alert('Invalid OTP. Use 123456');
             }
         }
+        function signUp() { alert('Signup integrated with community verification – coming soon!'); }
 
         // Navigation
-        function setPage(page) {
-            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(page + 'Page').classList.remove('hidden');
-            currentPage = page;
-            if (page === 'home') loadHome();
-            if (page === 'search') loadSearch();
-            if (page === 'messages') loadMessages();
-            if (page === 'groups') loadGroups();
-        }
-        document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
+        function showPage(page) {
+            document.querySelectorAll('#app > section:not(#feed), #feed').forEach(el => el.classList.add('hidden'));
+            if (page === 'feed') document.getElementById('feed').classList.remove('hidden');
+            else document.getElementById(page).classList.remove('hidden');
+            document.getElementById('topNav').classList.add('hidden');
+            // Smooth scroll for reels
+            if (page === 'reels') document.getElementById('reelsContainer').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Home
-        function loadHome() {
-            const postsDiv = document.getElementById('posts');
-            postsDiv.innerHTML = '';
+        // Feed
+        function loadFeed() {
+            const feed = document.getElementById('postsFeed');
+            feed.innerHTML = '';
             dummyPosts.forEach(post => {
-                const postEl = document.createElement('div');
-                postEl.className = 'bg-white rounded-2xl shadow-lg border-2 border-saffron-200 overflow-hidden mb-4 hover:shadow-xl transition post-card';
+                const isLiked = likedPosts.has(post.id);
+                const postEl = document.createElement('article');
+                postEl.className = 'bg-white rounded-lg shadow-sm overflow-hidden';
                 postEl.innerHTML = `
-                    <div class="p-4 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="text-3xl">${post.user.avatar}</div>
-                            <div>
-                                <p class="font-bold text-saffron-800">${post.user.name}</p>
-                                <p class="text-sm text-saffron-600">${post.time}</p>
-                            </div>
-                        </div>
-                        <button class="text-saffron-600 hover:bg-saffron-100 p-2 rounded-full"><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="p-3 border-b border-saffron-200 flex items-center">
+                        <img src="${post.avatar}" class="w-8 h-8 rounded-full mr-2" alt="User">
+                        <h3 class="font-semibold text-saffron-700">${post.user}</h3>
+                        <button class="ml-auto p-1 hover:bg-saffron-100 rounded-full transition"><i class="fas fa-ellipsis-vertical text-saffron-600"></i></button>
                     </div>
-                    <div class="px-4 pb-3"><p class="text-gray-800">${post.content}</p></div>
-                    <div class="bg-gradient-to-br from-saffron-100 to-saffron-50 h-64 flex items-center justify-center text-8xl border-y-2 border-saffron-200">${post.image}</div>
-                    <div class="p-4 space-y-3">
-                        <div class="flex items-center justify-between text-sm text-saffron-600 font-semibold">
-                            <span>${post.likes} likes</span>
-                            <span>${post.comments} comments</span>
+                    <img src="${post.img}" class="w-full post-img cursor-pointer hover:brightness-90 transition" alt="Post" onclick="openComments(${post.id})">
+                    <div class="p-3 space-y-2">
+                        <div class="flex items-center space-x-3">
+                            <button onclick="likePost(${post.id}, this)" class="like-heart ${isLiked ? 'liked fas' : 'far'} fa-heart text-lg"></button>
+                            <button onclick="openComments(${post.id})"><i class="far fa-comment text-lg hover:scale-110 transition"></i></button>
+                            <i class="far fa-paper-plane text-lg hover:scale-110 transition"></i>
+                            <button class="ml-auto hover:bg-saffron-100 rounded-full p-1 transition"><i class="far fa-bookmark text-lg"></i></button>
                         </div>
-                        <div class="flex items-center justify-around border-t-2 border-saffron-200 pt-3">
-                            <button class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100"><i class="fas fa-heart"></i> Like</button>
-                            <button class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100"><i class="fas fa-comment"></i> Comment</button>
-                            <button class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition text-saffron-700 hover:bg-saffron-100"><i class="fas fa-share"></i> Share</button>
-                            <button class="p-2 rounded-xl transition text-saffron-700 hover:bg-saffron-100"><i class="fas fa-bookmark"></i></button>
-                        </div>
+                        <p class="font-semibold text-saffron-700">${post.likes + (isLiked ? 1 : 0)} likes</p>
+                        <p class="font-semibold text-saffron-700">${post.user} ${post.caption}</p>
+                        <p class="text-sm text-saffron-600">${post.comments} comments</p>
+                        <p class="text-xs text-saffron-400">2 hours ago</p>
                     </div>
                 `;
-                postsDiv.appendChild(postEl);
+                feed.appendChild(postEl);
             });
+        }
+        function likePost(id, el) {
+            if (likedPosts.has(id)) {
+                likedPosts.delete(id);
+                el.classList.remove('liked', 'fas');
+                el.classList.add('far');
+            } else {
+                likedPosts.add(id);
+                el.classList.add('liked', 'fas');
+                el.classList.remove('far');
+            }
+            loadFeed(); // Refresh to update count
+        }
+        function openComments(id) {
+            document.getElementById('commentsModal').classList.remove('hidden');
+        }
+        function closeComments() {
+            document.getElementById('commentsModal').classList.add('hidden');
         }
 
         // Search
-        function loadSearch() {
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '';
-            dummyUsers.forEach(user => {
-                const userEl = document.createElement('div');
-                userEl.className = 'bg-white rounded-2xl shadow-lg p-4 border-2 border-saffron-200 hover:shadow-xl transition';
-                userEl.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="text-4xl">${user.avatar}</div>
-                            <div>
-                                <p class="font-bold text-saffron-800">${user.name}</p>
-                                <p class="text-sm text-saffron-600">${user.bio}</p>
-                                <p class="text-xs text-gray-500">${user.followers} followers</p>
-                            </div>
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const results = document.getElementById('searchResults');
+            if (query) {
+                results.innerHTML = dummyPosts.filter(post => post.caption.toLowerCase().includes(query)).map(post => `
+                    <div class="bg-white rounded-lg p-4 shadow-sm cursor-pointer hover:bg-saffron-50 transition">
+                        <img src="${post.img}" class="w-16 h-16 rounded object-cover mr-3" alt="Post">
+                        <div>
+                            <h3 class="font-semibold text-saffron-700">${post.user}</h3>
+                            <p class="text-saffron-600">${post.caption.substring(0, 50)}...</p>
                         </div>
-                        <button class="bg-gradient-to-r from-saffron-500 to-saffron-400 text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition">Follow</button>
+                    </div>
+                `).join('');
+            } else {
+                results.innerHTML = `
+                    <div class="text-center text-saffron-500 py-8">
+                        <i class="fas fa-search text-4xl mb-2"></i>
+                        <p>Search for people, posts, and stories</p>
                     </div>
                 `;
-                resultsDiv.appendChild(userEl);
-            });
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                resultsDiv.querySelectorAll('div').forEach(el => {
-                    el.style.display = el.textContent.toLowerCase().includes(query) ? 'block' : 'none';
-                });
-            });
-        }
+            }
+        });
 
         // Messages
-        function loadMessages() {
-            const chatList = document.getElementById('chatList');
-            chatList.innerHTML = '';
-            dummyUsers.forEach(user => {
-                const chatEl = document.createElement('button');
-                chatEl.className = 'w-full p-4 flex items-center space-x-3 hover:bg-saffron-50 border-b border-saffron-100 transition';
-                chatEl.innerHTML = `
-                    <div class="text-3xl">${user.avatar}</div>
-                    <div class="flex-1 text-left">
-                        <p class="font-semibold text-saffron-800">${user.name}</p>
-                        <p class="text-sm text-gray-500 truncate">Click to chat...</p>
-                    </div>
-                `;
-                chatEl.onclick = () => openChat(user);
-                chatList.appendChild(chatEl);
-            });
+        function openDM() {
+            document.getElementById('dmView').classList.remove('hidden');
         }
-        function openChat(user) {
-            document.querySelector('#chatView .flex-1').innerHTML = `
-                <div class="p-4 border-b-2 border-saffron-200 flex items-center space-x-3 bg-gradient-to-r from-saffron-100 to-white">
-                    <div class="text-3xl">${user.avatar}</div>
-                    <p class="font-bold text-saffron-800">${user.name}</p>
-                </div>
-                <div class="flex-1 p-4 overflow-y-auto bg-gradient-to-br from-saffron-50 to-white">
-                    <div class="text-center text-gray-500 text-sm mb-4">Start of conversation</div>
-                </div>
-            `;
-            // Send button dummy
-            document.querySelector('#messagesPage button:last-child').onclick = () => alert('Message sent!');
+        function closeDM() {
+            document.getElementById('dmView').classList.add('hidden');
         }
-
-        // Groups
-        function loadGroups() {
-            const groupsDiv = document.querySelector('#groupsPage .grid');
-            groupsDiv.innerHTML = '';
-            const groups = ['Traditional Arts', 'Folk Music', 'Cultural Events', 'Language Learning'];
-            const icons = ['🎨', '🎵', '🎉', '📚'];
-            groups.forEach((group, idx) => {
-                const groupEl = document.createElement('div');
-                groupEl.className = 'bg-white rounded-2xl shadow-lg p-6 border-2 border-saffron-200 hover:shadow-xl transition';
-                groupEl.innerHTML = `
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="text-5xl">${icons[idx]}</div>
-                        <span class="bg-saffron-100 text-saffron-700 px-3 py-1 rounded-full text-sm font-semibold">${Math.floor(Math.random() * 500) + 100} members</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-saffron-800 mb-2">${group}</h3>
-                    <p class="text-gray-600 mb-4">Connect with enthusiasts and share your passion</p>
-                    <button class="w-full bg-gradient-to-r from-saffron-500 to-saffron-400 text-white py-2 rounded-xl font-semibold hover:shadow-lg transition">Join Group</button>
-                `;
-                groupsDiv.appendChild(groupEl);
-            });
-        }
+        document.querySelector('#dmView input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const msg = e.target.value;
+                if (msg) {
+                    const messages = document.getElementById('chatMessages');
+                    const newMsg = document.createElement('div');
+                    newMsg.className = 'chat-bubble bg-saffron-500 text-white p-3 rounded-2xl ml-auto';
+                    newMsg.textContent = msg;
+                    messages.appendChild(newMsg);
+                    e.target.value = '';
+                    messages.scrollTop = messages.scrollHeight;
+                }
+            }
+        });
+        document.querySelector('#dmView button:last-child').addEventListener('click', () => {
+            document.querySelector('#dmView input').dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter' }));
+        });
 
         // Random Chat
-        function startRandomChat() {
-            document.getElementById('startChatBtn').classList.add('hidden');
-            document.getElementById('searchingAnim').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('searchingView').classList.add('hidden');
-                document.getElementById('chatView').classList.remove('hidden');
-            }, 2000);
+        async function startRandomVideo() {
+            const btn = event.target;
+            btn.classList.add('hidden');
+            btn.innerHTML += '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></div>'; // Spinner
+            setTimeout(async () => {
+                document.getElementById('videoChatArea').classList.remove('hidden');
+                // Dummy camera toggle
+                const localVid = document.createElement('video');
+                localVid.srcObject = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }).catch(() => null);
+                if (localVid.srcObject) {
+                    document.querySelector('.video-chat:first-child').innerHTML = '';
+                    localVid.classList.add('w-full', 'h-full', 'rounded-xl');
+                    localVid.autoplay = true;
+                    document.querySelector('.video-chat:first-child').appendChild(localVid);
+                }
+            }, 1500);
         }
-        function endRandomChat() {
-            document.getElementById('chatView').classList.add('hidden');
-            document.getElementById('searchingView').classList.remove('hidden');
-            document.getElementById('startChatBtn').classList.remove('hidden');
-            document.getElementById('searchingAnim').classList.add('hidden');
+        function endRandomVideo() {
+            document.getElementById('videoChatArea').classList.add('hidden');
+            document.querySelector('#randomchat button').classList.remove('hidden');
+            // Stop streams
+            const videos = document.querySelectorAll('video');
+            videos.forEach(v => v.srcObject?.getTracks().forEach(t => t.stop()));
         }
 
-        // Init
-        if (isLoggedIn) {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('nav').classList.remove('hidden');
-            setPage('home');
-        }
+        // Utils
+        function goBack() { showPage('feed'); }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show install button if needed
+        });
+        // To trigger install: deferredPrompt.prompt();
     </script>
 </body>
 
