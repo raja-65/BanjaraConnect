@@ -386,7 +386,8 @@
                     <div class="flex space-x-2">
                         <input type="text" id="commentInput" placeholder="Add a comment..."
                             class="flex-1 p-3 border border-saffron-300 rounded-full focus:ring-2 focus:ring-saffron-500">
-                        <button onclick="postComment()" class="btn-primary text-white px-6 rounded-full font-semibold" aria-label="Post comment">
+                        <button onclick="postComment()" class="btn-primary text-white px-6 rounded-full font-semibold"
+                            aria-label="Post comment">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
@@ -395,13 +396,14 @@
         </div>
 
         <!-- Story Modal -->
+        <!-- Story Modal -->
         <div id="storyModal" class="hidden fixed inset-0 bg-black z-50 flex items-center justify-center">
             <button onclick="closeStory()" class="absolute top-4 right-4 p-3 bg-white rounded-full shadow-lg z-10"
                 aria-label="Close">
                 <i class="fas fa-times text-saffron-600"></i>
             </button>
             <div class="w-full h-full flex items-center justify-center p-4">
-                <img id="storyImage" src="" alt="Story" class="max-w-full max-h-full object-contain">
+                <!-- Content loaded dynamically -->
             </div>
             <div class="absolute bottom-8 left-0 right-0 flex justify-center space-x-6 px-4">
                 <button onclick="likeStory()" class="bg-white p-4 rounded-full shadow-lg hover:scale-110 transition"
@@ -441,8 +443,20 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Story Circles Grid -->
+            <div class="p-4">
+                <h3 class="font-bold text-saffron-700 mb-4 text-lg">Discover Stories</h3>
+                <div class="grid grid-cols-4 gap-4" id="searchStoriesGrid">
+                    <!-- Stories loaded here -->
+                </div>
+            </div>
+
             <div id="searchResults" class="p-4">
-                <p class="text-center text-saffron-600 mt-8">Search for Banjara community members and content</p>
+                <h3 class="font-bold text-saffron-700 mb-4 text-lg">Posts</h3>
+                <div class="grid grid-cols-3 gap-1" id="searchPostsGrid">
+                    <!-- Search results loaded here -->
+                </div>
             </div>
         </section>
 
@@ -455,7 +469,50 @@
 
         <!-- Messages Page -->
         <section id="messages" class="hidden min-h-screen pt-16 pb-20 bg-saffron-50">
-            <div class="p-4 space-y-3" id="messagesList">
+            <!-- Groups Section -->
+            <div class="bg-white p-4 border-b border-saffron-200">
+                <h3 class="font-bold text-saffron-700 mb-3">Groups</h3>
+                <div class="space-y-2">
+                    <div
+                        class="flex items-center space-x-3 p-3 bg-saffron-50 rounded-xl cursor-pointer hover:bg-saffron-100 transition">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-saffron-500 to-saffron-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">Banjara Wanderers</p>
+                            <p class="text-sm text-saffron-600">234 members • 12 new messages</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center space-x-3 p-3 bg-saffron-50 rounded-xl cursor-pointer hover:bg-saffron-100 transition">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-saffron-500 to-saffron-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">Cultural Heritage</p>
+                            <p class="text-sm text-saffron-600">156 members • 5 new messages</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center space-x-3 p-3 bg-saffron-50 rounded-xl cursor-pointer hover:bg-saffron-100 transition">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-saffron-500 to-saffron-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-saffron-700">Banjara Artists</p>
+                            <p class="text-sm text-saffron-600">89 members • 2 new messages</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Direct Messages -->
+            <div class="p-4">
+                <h3 class="font-bold text-saffron-700 mb-3">Direct Messages</h3>
+                <div class="space-y-3" id="messagesList">
                 <!-- Messages loaded dynamically -->
             </div>
         </section>
@@ -589,13 +646,15 @@
 
         // Data
         const stories = [
-            { name: 'You', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600' },
-            { name: 'Rajesh', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600' },
-            { name: 'Priya', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=600' },
-            { name: 'Anita', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600' },
-            { name: 'Kumar', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600' },
-            { name: 'Meera', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600' }
-        ];
+                { name: 'You', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600', video: null },
+                { name: 'Rajesh', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600', video: 'https://www.youtube.com/embed/1bvGFTovtIA?autoplay=1&mute=0' },
+                { name: 'Priya', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=600', video: 'https://www.youtube.com/embed/LXCNNRnOD-s?autoplay=1&mute=0' },
+                { name: 'Anita', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600', video: 'https://www.youtube.com/embed/JlagpKQjodQ?autoplay=1&mute=0' },
+                { name: 'Kumar', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600', video: 'https://www.youtube.com/embed/DAHjPkz6xro?autoplay=1&mute=0' },
+                { name: 'Meera', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600', video: null },
+                { name: 'Sanjay', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600', video: null },
+                { name: 'Kavita', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600', video: null }
+            ];
 
         const posts = [
             {
@@ -724,18 +783,33 @@
 
         // Load Stories
         function loadStories() {
-            const container = document.getElementById('storiesContainer');
-            container.innerHTML = stories.map(story => `
-                <div class="flex flex-col items-center" onclick="openStory('${story.image}')">
-                    <div class="story-circle">
-                        <div class="story-inner">
-                            <img src="${story.image}" class="w-full h-full object-cover" alt="${story.name}">
-                        </div>
-                    </div>
-                    <p class="text-xs text-saffron-700 mt-1 font-medium">${story.name}</p>
+                const container = document.getElementById('storiesContainer');
+                container.innerHTML = stories.map(story => `
+        <div class="flex flex-col items-center" onclick="openStory('${story.image}', ${story.video ? `'${story.video}'` : 'null'})">
+            <div class="story-circle">
+                <div class="story-inner">
+                    <img src="${story.image}" class="w-full h-full object-cover" alt="${story.name}">
                 </div>
-            `).join('');
-        }
+            </div>
+            <p class="text-xs text-saffron-700 mt-1 font-medium">${story.name}</p>
+        </div>
+    `).join('');
+
+                // Also load in search page
+                const searchGrid = document.getElementById('searchStoriesGrid');
+                if (searchGrid) {
+                    searchGrid.innerHTML = stories.map(story => `
+            <div class="flex flex-col items-center" onclick="openStory('${story.image}', ${story.video ? `'${story.video}'` : 'null'})">
+                <div class="story-circle">
+                    <div class="story-inner">
+                        <img src="${story.image}" class="w-full h-full object-cover" alt="${story.name}">
+                    </div>
+                </div>
+                <p class="text-xs text-saffron-700 mt-1 font-medium truncate w-full text-center">${story.name}</p>
+            </div>
+        `).join('');
+                }
+            }
 
         // Load Posts
         function loadPosts() {
@@ -771,6 +845,16 @@
                         <p class="font-semibold text-saffron-700 mb-1"><span id="likes-${post.id}">${post.likes}</span> likes</p>
                         <p class="text-saffron-700"><span class="font-semibold">${post.user}</span> ${post.caption}</p>
                         <button onclick="openComments(${post.id})" class="text-saffron-600 text-sm mt-2">View all ${post.comments} comments</button>
+                        <div class="mt-3 space-y-2 border-t border-saffron-100 pt-3">
+    <div class="flex items-start space-x-2">
+        <div class="w-6 h-6 rounded-full bg-saffron-200 flex items-center justify-center text-xs font-semibold text-saffron-700">PS</div>
+        <p class="text-sm text-saffron-700"><span class="font-semibold">priya_sharma</span> Amazing! 🌟</p>
+    </div>
+    <div class="flex items-start space-x-2">
+        <div class="w-6 h-6 rounded-full bg-saffron-200 flex items-center justify-center text-xs font-semibold text-saffron-700">RK</div>
+        <p class="text-sm text-saffron-700"><span class="font-semibold">rajesh_k</span> Love this culture! ❤️</p>
+    </div>
+</div>
                     </div>
                 </div>
             `).join('');
@@ -782,7 +866,7 @@
             container.innerHTML = reels.map(reel => `
                 <div class="relative h-screen snap-center flex items-center justify-center bg-black">
                     <iframe class="w-full h-full"
-                        src="https://www.youtube.com/embed/${reel.embed}?autoplay=1&mute=1&loop=1&playlist=${reel.embed}&controls=0"
+                        src="https://www.youtube.com/embed/${reel.embed}?autoplay=1&mute=0&loop=1&playlist=${reel.embed}&controls=1"
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
@@ -881,10 +965,26 @@
         }
 
         // Story
-        function openStory(imageUrl) {
-            document.getElementById('storyImage').src = imageUrl;
-            document.getElementById('storyModal').classList.remove('hidden');
-        }
+        function openStory(imageUrl, videoUrl = null) {
+                const storyModal = document.getElementById('storyModal');
+                const storyContent = storyModal.querySelector('.w-full.h-full');
+
+                if (videoUrl) {
+                    storyContent.innerHTML = `
+            <iframe src="${videoUrl}" 
+                class="w-full h-full"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        `;
+                } else {
+                    storyContent.innerHTML = `
+            <img id="storyImage" src="${imageUrl}" alt="Story" class="max-w-full max-h-full object-contain">
+        `;
+                }
+
+                storyModal.classList.remove('hidden');
+            }
 
         function closeStory() {
             document.getElementById('storyModal').classList.add('hidden');
