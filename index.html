@@ -461,9 +461,88 @@
         </section>
 
         <!-- Reels Page -->
+        <!-- Reels Page -->
         <section id="reels" class="hidden min-h-screen bg-black">
             <div id="reelsContainer" class="h-screen overflow-y-auto snap-y snap-mandatory">
-                <!-- Reels loaded dynamically -->
+                <div class="relative h-screen snap-center flex items-center justify-center bg-black" data-reel="0">
+                    <div class="w-full h-full" id="reel-container-0"></div>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10 max-w-xs">
+                        <p class="font-bold text-xl drop-shadow-lg">Banjara Status #1</p>
+                        <div class="flex space-x-6">
+                            <button onclick="likeReel(1)" class="flex flex-col items-center" title="Like reel">
+                                <i class="far fa-heart text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">1.2k</span>
+                            </button>
+                            <button onclick="commentReel(1)" class="flex flex-col items-center" title="Comment on reel">
+                                <i class="far fa-comment text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">45</span>
+                            </button>
+                            <button onclick="shareReel(1)" class="flex flex-col items-center" title="Share reel">
+                                <i class="fas fa-share text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="relative h-screen snap-center flex items-center justify-center bg-black" data-reel="1">
+                    <div class="w-full h-full" id="reel-container-1"></div>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10 max-w-xs">
+                        <p class="font-bold text-xl drop-shadow-lg">Love Shayari #2</p>
+                        <div class="flex space-x-6">
+                            <button onclick="likeReel(2)" class="flex flex-col items-center" title="Like reel">
+                                <i class="far fa-heart text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">890</span>
+                            </button>
+                            <button onclick="commentReel(2)" class="flex flex-col items-center" title="Comment on reel">
+                                <i class="far fa-comment text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">23</span>
+                            </button>
+                            <button onclick="shareReel(2)" class="flex flex-col items-center" title="Share reel">
+                                <i class="fas fa-share text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="relative h-screen snap-center flex items-center justify-center bg-black" data-reel="2">
+                    <div class="w-full h-full" id="reel-container-2"></div>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10 max-w-xs">
+                        <p class="font-bold text-xl drop-shadow-lg">Diwani Chu #3</p>
+                        <div class="flex space-x-6">
+                            <button onclick="likeReel(3)" class="flex flex-col items-center" title="Like reel">
+                                <i class="far fa-heart text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">1.5k</span>
+                            </button>
+                            <button onclick="commentReel(3)" class="flex flex-col items-center" title="Comment on reel">
+                                <i class="far fa-comment text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">67</span>
+                            </button>
+                            <button onclick="shareReel(3)" class="flex flex-col items-center" title="Share reel">
+                                <i class="fas fa-share text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="relative h-screen snap-center flex items-center justify-center bg-black" data-reel="3">
+                    <div class="w-full h-full" id="reel-container-3"></div>
+                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10 max-w-xs">
+                        <p class="font-bold text-xl drop-shadow-lg">Banjara Song #4</p>
+                        <div class="flex space-x-6">
+                            <button onclick="likeReel(4)" class="flex flex-col items-center" title="Like reel">
+                                <i class="far fa-heart text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">2.1k</span>
+                            </button>
+                            <button onclick="commentReel(4)" class="flex flex-col items-center" title="Comment on reel">
+                                <i class="far fa-comment text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                                <span class="text-sm mt-1">89</span>
+                            </button>
+                            <button onclick="shareReel(4)" class="flex flex-col items-center" title="Share reel">
+                                <i class="fas fa-share text-3xl drop-shadow-lg hover:scale-110 transition"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -648,7 +727,7 @@
         const stories = [
                 { name: 'You', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600', video: null },
                 { name: 'Rajesh', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600', video: 'https://www.youtube.com/embed/1bvGFTovtIA?autoplay=1&mute=0' },
-                { name: 'Priya', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=600', video: 'https://www.youtube.com/embed/LXCNNRnOD-s?autoplay=1&mute=0' },
+                { name: 'Priya', image: 'https://womansbible.com/wp-content/uploads/2024/03/woman-wearing-blue-denim-jacket-and-eyeglasses-standing-and-laughing-QjcK2t0lXN8-1600x832.jpeg', video: 'https://www.youtube.com/embed/LXCNNRnOD-s?autoplay=1&mute=0' },
                 { name: 'Anita', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600', video: 'https://www.youtube.com/embed/JlagpKQjodQ?autoplay=1&mute=0' },
                 { name: 'Kumar', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600', video: 'https://www.youtube.com/embed/DAHjPkz6xro?autoplay=1&mute=0' },
                 { name: 'Meera', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600', video: null },
@@ -700,11 +779,14 @@
         ];
 
         const reels = [
-            { id: 1, title: 'Banjara Status #1', embed: '1bvGFTovtIA', likes: '1.2k', comments: 45 },
-            { id: 2, title: 'Love Shayari #2', embed: 'LXCNNRnOD-s', likes: '890', comments: 23 },
-            { id: 3, title: 'Diwani Chu #3', embed: 'JlagpKQjodQ', likes: '1.5k', comments: 67 },
-            { id: 4, title: 'Banjara Song #4', embed: 'DAHjPkz6xro', likes: '2.1k', comments: 89 }
-        ];
+                { id: 0, title: 'Banjara Status #1', embed: '1bvGFTovtIA', likes: '1.2k', comments: 45 },
+                { id: 1, title: 'Love Shayari #2', embed: 'LXCNNRnOD-s', likes: '890', comments: 23 },
+                { id: 2, title: 'Diwani Chu #3', embed: 'JlagpKQjodQ', likes: '1.5k', comments: 67 },
+                { id: 3, title: 'Banjara Song #4', embed: 'DAHjPkz6xro', likes: '2.1k', comments: 89 }
+            ];
+
+            let reelPlayers = {};
+            let currentReelIndex = 0;
 
         const messages = [
             { user: 'Rajesh Kumar', avatar: 'RK', message: 'Hey, how are you?', time: '2m', unread: true },
@@ -777,9 +859,9 @@
                 loadStories();
                 loadPosts();
                 loadMessages();
-                loadReels();
                 updateProfile();
                 initReelScrollDetection();
+                // Don't load reels until user goes to reels page
             }
 
         // Load Stories
@@ -810,6 +892,34 @@
             </div>
         `).join('');
                 }
+            }
+
+        function loadReels() {
+                // Load first reel only
+                loadReelVideo(0);
+            }
+
+            function loadReelVideo(index) {
+                const container = document.getElementById(`reel-container-${index}`);
+                if (!container || reelPlayers[index]) return;
+
+                const iframe = document.createElement('iframe');
+                iframe.className = 'w-full h-full';
+                iframe.src = `https://www.youtube.com/embed/${reels[index].embed}?autoplay=1&mute=0&loop=1&playlist=${reels[index].embed}&controls=1&enablejsapi=1`;
+                iframe.frameBorder = '0';
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                iframe.allowFullscreen = true;
+
+                container.appendChild(iframe);
+                reelPlayers[index] = iframe;
+            }
+
+            function unloadReelVideo(index) {
+                const container = document.getElementById(`reel-container-${index}`);
+                if (container) {
+                    container.innerHTML = '';
+                }
+                delete reelPlayers[index];
             }
 
         // Load Posts
@@ -862,38 +972,10 @@
         }
 
         // Load Reels
-        function loadReels() {
-                const container = document.getElementById('reelsContainer');
-                container.innerHTML = reels.map((reel, index) => `
-        <div class="relative h-screen snap-center flex items-center justify-center bg-black" data-reel-index="${index}">
-            <iframe id="reel-${index}" class="w-full h-full"
-                src="https://www.youtube.com/embed/${reel.embed}?enablejsapi=1&autoplay=${index === 0 ? 1 : 0}&mute=0&loop=1&playlist=${reel.embed}&controls=1"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-                    <div class="absolute bottom-20 left-4 text-white space-y-4 z-10 max-w-xs">
-                        <p class="font-bold text-xl drop-shadow-lg">${reel.title}</p>
-                        <div class="flex space-x-6">
-                            <button onclick="likeReel(${reel.id})" class="flex flex-col items-center">
-                                <i class="far fa-heart text-3xl drop-shadow-lg hover:scale-110 transition"></i>
-                                <span class="text-sm mt-1">${reel.likes}</span>
-                            </button>
-                            <button onclick="commentReel(${reel.id})" class="flex flex-col items-center">
-                                <i class="far fa-comment text-3xl drop-shadow-lg hover:scale-110 transition"></i>
-                                <span class="text-sm mt-1">${reel.comments}</span>
-                            </button>
-                            <button onclick="shareReel(${reel.id})" class="flex flex-col items-center">
-                                <i class="fas fa-share text-3xl drop-shadow-lg hover:scale-110 transition"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+        
 
         function initReelScrollDetection() {
                 const reelsContainer = document.getElementById('reelsContainer');
-                let currentReelIndex = 0;
 
                 if (reelsContainer) {
                     reelsContainer.addEventListener('scroll', () => {
@@ -901,20 +983,12 @@
                         const windowHeight = window.innerHeight;
                         const newIndex = Math.round(scrollTop / windowHeight);
 
-                        if (newIndex !== currentReelIndex) {
-                            // Pause previous reel
-                            const prevIframe = document.getElementById(`reel-${currentReelIndex}`);
-                            if (prevIframe) {
-                                const prevSrc = prevIframe.src;
-                                prevIframe.src = prevSrc.replace('autoplay=1', 'autoplay=0');
-                            }
+                        if (newIndex !== currentReelIndex && newIndex >= 0 && newIndex < reels.length) {
+                            // Unload previous reel
+                            unloadReelVideo(currentReelIndex);
 
-                            // Play new reel
-                            const newIframe = document.getElementById(`reel-${newIndex}`);
-                            if (newIframe) {
-                                const newSrc = newIframe.src;
-                                newIframe.src = newSrc.replace('autoplay=0', 'autoplay=1');
-                            }
+                            // Load new reel
+                            loadReelVideo(newIndex);
 
                             currentReelIndex = newIndex;
                         }
@@ -948,28 +1022,38 @@
 
                 // Stop all reels when leaving reels page
                 if (page !== 'reels') {
-                    const reelsContainer = document.getElementById('reelsContainer');
-                    const iframes = reelsContainer.querySelectorAll('iframe');
-                    iframes.forEach(iframe => {
-                        const src = iframe.src;
-                        iframe.src = src.replace('autoplay=1', 'autoplay=0');
+                    // Unload all reels
+                    Object.keys(reelPlayers).forEach(index => {
+                        unloadReelVideo(parseInt(index));
                     });
+                    currentReelIndex = 0;
                 } else {
-                    // When entering reels page, play first reel
+                    // Load first reel when entering reels page
                     setTimeout(() => {
-                        const firstReel = document.getElementById('reel-0');
-                        if (firstReel) {
-                            const src = firstReel.src;
-                            firstReel.src = src.replace('autoplay=0', 'autoplay=1');
-                        }
-                    }, 100);
+                        loadReelVideo(0);
+                    }, 300);
                 }
 
-            // Rest of the function continues...
+                document.getElementById('homeHeader').classList.add('hidden');
+                document.getElementById('topNav').classList.add('hidden');
 
-            document.getElementById(page).classList.remove('hidden');
-            currentPage = page;
-        }
+                if (page === 'feed') {
+                    document.getElementById('homeHeader').classList.remove('hidden');
+                } else {
+                    document.getElementById('topNav').classList.remove('hidden');
+                    const titles = {
+                        search: 'Search',
+                        reels: 'Reels',
+                        messages: 'Messages',
+                        randomchat: 'Random Chat',
+                        profile: 'Profile'
+                    };
+                    document.getElementById('topTitle').textContent = titles[page];
+                }
+
+                document.getElementById(page).classList.remove('hidden');
+                currentPage = page;
+            }
 
         function goBack() {
             showPage('feed');
