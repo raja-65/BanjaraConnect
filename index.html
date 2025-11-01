@@ -116,38 +116,40 @@
 
 <body class="bg-saffron-50 text-saffron-700 min-h-screen">
     <!-- Login Page -->
-    <div id="loginPage" 
-        class="w-full max-w-md text-center">
-        <img id="logo" src="BConnect_logo.png" alt="Banjara Connect Logo" class="mx-auto mb-6">
-        <div class="space-y-4">
-            <input type="text" id="usernameInput" placeholder="Choose Username (Optional)"
-                class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
-            <input type="file" id="profileImageInput" accept="image/*" class="hidden">
-            <button onclick="document.getElementById('profileImageInput').click()"
-                class="w-full bg-saffron-100 text-saffron-600 py-3 rounded-md font-semibold hover:bg-saffron-200 transition">Upload
-                Profile Photo (Optional)</button>
-            <div id="profilePreview"
-                class="hidden mx-auto w-20 h-20 rounded-full bg-saffron-200 flex items-center justify-center overflow-hidden border-2 border-saffron-300">
-                <i class="fas fa-user text-saffron-500 text-3xl"></i>
+    <div id="loginPage"
+        class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-saffron-50 to-white">
+        <div class="w-full max-w-md text-center">
+            <img id="logo" src="BConnect_logo.png" alt="Banjara Connect Logo" class="mx-auto mb-6">
+            <!-- Upload your formatted logo.png -->
+            <div class="space-y-4">
+                <input type="text" id="usernameInput" placeholder="Choose Username"
+                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                <input type="file" id="profileImageInput" accept="image/*" class="hidden">
+                <button onclick="document.getElementById('profileImageInput').click()"
+                    class="w-full bg-saffron-100 text-saffron-600 py-3 rounded-md font-semibold hover:bg-saffron-200 transition">Upload
+                    Profile Photo (Optional)</button>
+                <div id="profilePreview"
+                    class="hidden mx-auto w-20 h-20 rounded-full bg-saffron-200 flex items-center justify-center overflow-hidden border-2 border-saffron-300">
+                    <i class="fas fa-user text-saffron-500 text-3xl"></i>
+                </div>
+                <input type="tel" id="phoneInput" placeholder="Mobile Number (10 digits)" maxlength="10"
+                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500"
+                    onkeyup="checkPhone()">
+                <button onclick="sendOTP()" id="sendOtpBtn"
+                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50 hover:shadow-lg transition cursor-not-allowed disabled:cursor-not-allowed"
+                    disabled>Next</button>
+                <div id="otpSection" class="hidden space-y-4">
+                    <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
+                        class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500 text-center">
+                    <p class="text-xs text-saffron-600 text-center">Demo: Use 123456</p>
+                    <button onclick="verifyOTP()"
+                        class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold hover:shadow-lg transition">Log
+                        In</button>
+                </div>
             </div>
-            <input type="tel" id="phoneInput" placeholder="Mobile Number (10 digits only)" maxlength="10"
-                class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500"
-                oninput="checkPhone()">
-            <button onclick="sendOTP()" id="sendOtpBtn"
-                class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold disabled:opacity-50 hover:shadow-lg transition disabled:cursor-not-allowed"
-                disabled>Next</button>
-            <div id="otpSection" class="hidden space-y-4">
-                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6"
-                    class="w-full p-3 border border-saffron-300 rounded-md focus:outline-none focus:ring-2 focus:ring-saffron-500 text-center">
-                <p class="text-xs text-saffron-600 text-center">Demo: Use 123456</p>
-                <button onclick="verifyOTP()"
-                    class="w-full bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-md font-semibold hover:shadow-lg transition">Log
-                    In</button>
-            </div>
+            <p class="text-center mt-4 text-xs text-saffron-600">New here? <button onclick="signUp()"
+                    class="text-saffron-500 font-semibold hover:underline">Sign up</button></p>
         </div>
-        <p class="text-center mt-4 text-xs text-saffron-600">New here? <button onclick="signUp()"
-                class="text-saffron-500 font-semibold hover:underline">Sign up</button></p>
-    </>
     <!-- Main App -->
     <div id="app" class="hidden min-h-screen bg-saffron-50">
         <!-- Home Header with Notification & Plus -->
@@ -155,14 +157,12 @@
             class="fixed top-0 left-0 right-0 bg-white border-b border-saffron-200 z-50 px-4 py-2 flex items-center justify-between shadow-sm">
             <h1 class="font-bold text-saffron-700 text-lg">Banjara Connect</h1>
             <div class="flex space-x-4">
-                <button onclick="showNotifications()" class="p-2 hover:bg-saffron-100 rounded-full transition relative"
-                    aria-label="Show notifications">
+                <button onclick="showNotifications()" class="p-2 hover:bg-saffron-100 rounded-full transition relative" aria-label="Show notifications">
                     <i class="fas fa-bell text-saffron-600"></i>
                     <span
                         class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
                 </button>
-                <button onclick="showCreateModal()" class="p-2 hover:bg-saffron-100 rounded-full transition"
-                    aria-label="Create new content">
+                <button onclick="showCreateModal()" class="p-2 hover:bg-saffron-100 rounded-full transition" aria-label="Create new content">
                     <i class="fas fa-plus text-saffron-600 text-lg"></i>
                 </button>
             </div>
@@ -182,17 +182,14 @@
                 <h2 class="text-xl font-bold text-saffron-700 mb-6 text-center">Create</h2>
                 <div class="space-y-4">
                     <button onclick="createReel()"
-                        class="w-full create-btn bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-lg font-semibold"
-                        aria-label="Create reel">Reel</button>
+                        class="w-full create-btn bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 rounded-lg font-semibold" aria-label="Create reel">Reel</button>
                     <button onclick="uploadStory()"
-                        class="w-full create-btn bg-saffron-100 text-saffron-700 py-3 rounded-lg font-semibold border border-saffron-300"
-                        aria-label="Upload story">Story</button>
+                        class="w-full create-btn bg-saffron-100 text-saffron-700 py-3 rounded-lg font-semibold border border-saffron-300" aria-label="Upload story">Story</button>
                     <button onclick="createPost()"
-                        class="w-full create-btn bg-saffron-100 text-saffron-700 py-3 rounded-lg font-semibold border border-saffron-300"
-                        aria-label="Create post">Post</button>
+                        class="w-full create-btn bg-saffron-100 text-saffron-700 py-3 rounded-lg font-semibold border border-saffron-300" aria-label="Create post">Post</button>
                 </div>
-                <button onclick="closeCreateModal()" class="w-full mt-4 text-saffron-500 text-sm hover:underline"
-                    aria-label="Cancel create">Cancel</button>
+                <button onclick="closeCreateModal()"
+                    class="w-full mt-4 text-saffron-500 text-sm hover:underline" aria-label="Cancel create">Cancel</button>
             </div>
         </div>
 
@@ -282,14 +279,13 @@
         <!-- Bottom Nav -->
         <nav
             class="fixed bottom-0 left-0 right-0 bg-white border-t border-saffron-200 flex justify-around py-2 z-50 shadow-lg">
-            <button onclick="showPage('feed')" class="flex flex-col items-center text-xs p-2 active:scale-95 transition"
-                aria-label="Go to home feed">
+            <button onclick="showPage('feed')"
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition" aria-label="Go to home feed">
                 <i class="fas fa-home text-saffron-600 text-lg"></i>
                 <span class="text-saffron-600">Home</span>
             </button>
             <button onclick="showPage('search')"
-                class="flex flex-col items-center text-xs p-2 active:scale-95 transition"
-                aria-label="Go to search page">
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition" aria-label="Go to search page">
                 <i class="fas fa-search text-saffron-600 text-lg"></i>
                 <span class="text-saffron-600">Search</span>
             </button>
@@ -299,14 +295,12 @@
                 <span class="text-saffron-600">Reels</span>
             </button>
             <button onclick="showPage('messages')"
-                class="flex flex-col items-center text-xs p-2 active:scale-95 transition"
-                aria-label="Go to messages page">
+                class="flex flex-col items-center text-xs p-2 active:scale-95 transition" aria-label="Go to messages page">
                 <i class="far fa-comment text-saffron-600 text-lg"></i>
                 <span class="text-saffron-600">Messages</span>
             </button>
             <button onclick="showPage('randomchat')"
-                class="flex flex-col items-center text-xs p-2 bg-gradient-to-r from-saffron-500 to-saffron-600 rounded-full p-3 text-white shadow-lg active:scale-95 transition"
-                aria-label="Go to random chat page">
+                class="flex flex-col items-center text-xs p-2 bg-gradient-to-r from-saffron-500 to-saffron-600 rounded-full p-3 text-white shadow-lg active:scale-95 transition" aria-label="Go to random chat page">
                 <i class="fas fa-video text-lg"></i>
                 <span class="text-xs">Random</span>
             </button>
@@ -318,8 +312,8 @@
                 <div class="flex">
                     <input type="text" id="searchInput" placeholder="Search Banjara stories..."
                         class="flex-1 p-3 border border-saffron-300 rounded-full focus:outline-none focus:ring-2 focus:ring-saffron-500">
-                    <button class="ml-2 p-3 bg-saffron-100 rounded-full hover:bg-saffron-200 transition"
-                        aria-label="Filter search"><i class="fas fa-sliders-h text-saffron-600"></i></button>
+                    <button class="ml-2 p-3 bg-saffron-100 rounded-full hover:bg-saffron-200 transition" aria-label="Filter search"><i
+                            class="fas fa-sliders-h text-saffron-600"></i></button>
                 </div>
             </div>
             <div id="searchResults" class="p-4 space-y-4">
@@ -447,9 +441,7 @@
                 <i class="fas fa-video text-4xl text-saffron-600 mb-4"></i>
                 <h2 class="text-xl font-bold text-saffron-700 mb-2">Random Video Chat</h2>
                 <p class="text-saffron-600 mb-4">Connect with random Banjara users</p>
-                <button
-                    class="bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition"
-                    aria-label="Start random video chat">
+                <button class="bg-gradient-to-r from-saffron-500 to-saffron-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition" aria-label="Start random video chat">
                     Start Random Chat
                 </button>
             </div>
@@ -461,24 +453,14 @@
         let currentUser = null;
         let currentPage = 'feed';
 
-        function checkPhone() {
-            const phone = document.getElementById('phoneInput').value.replace(/\D/g, ''); // Strip non-digits
-            const btn = document.getElementById('sendOtpBtn');
-            const isValid = phone.length === 10;
-            btn.disabled = !isValid;
-            btn.style.opacity = isValid ? '1' : '0.5';
-            btn.style.cursor = isValid ? 'pointer' : 'not-allowed';
-            if (isValid) {
-                console.log('Button enabled! Phone:', phone); // Debug log
+        // Login functions
+        function sendOTP() {
+            const phone = document.getElementById('phoneInput').value;
+            if (phone.length === 10) {
+                document.getElementById('otpSection').classList.remove('hidden');
+                document.getElementById('sendOtpBtn').disabled = true;
             }
         }
-
-        // No need for addEventListener if using oninput; but add for safety
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('phoneInput').addEventListener('input', checkPhone);
-        });
-
-        // Login functions
 
         function verifyOTP() {
             const otp = document.getElementById('otpInput').value;
@@ -650,11 +632,10 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Load posts on page load
             // loadPosts(); // Called after login
         });
     </script>
 </body>
-
 </html>
